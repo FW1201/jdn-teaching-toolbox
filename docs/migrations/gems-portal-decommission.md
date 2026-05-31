@@ -27,6 +27,13 @@ Only delete the old GitHub repository and Vercel project after all of these are 
 - Chrome Web Store page shows the 6 extension cards.
 - This backup document exists in the new repository.
 
+## Decommission Status
+
+- New production URL: `https://jdn-teaching-toolbox.vercel.app`
+- New GitHub repo: `https://github.com/FW1201/jdn-teaching-toolbox`
+- Old Vercel project `gems-portal`: removed successfully on 2026-05-31.
+- Old GitHub repo `FW1201/gems-portal`: deletion attempted after the new production gate passed, but the command was blocked by API/network access in the current Codex sandbox. The command below remains the required final cleanup step.
+
 ## Decommission Commands
 
 ```bash
