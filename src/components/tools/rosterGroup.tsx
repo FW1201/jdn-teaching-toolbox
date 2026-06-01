@@ -29,7 +29,7 @@ export function RosterCenter() {
       <Panel title="匯入名單">
         <TextAreaField label="貼上 CSV 或表格" rows={8} value={input} onChange={setInput} placeholder="座號,姓名,性別,備註" />
         <div className="action-row">
-          <button className="primary-button" onClick={() => setRoster(parseRoster(input))}>
+          <button className="primary-button" onClick={() => { const parsed = parseRoster(input); setRoster(parsed); notify(parsed.length ? `已匯入 ${parsed.length} 位學生` : "未解析到有效名單，請檢查格式", parsed.length ? "success" : "error"); }}>
             <Users size={16} />
             匯入 {textLines(input).length} 筆
           </button>
