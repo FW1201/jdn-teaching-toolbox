@@ -1,24 +1,29 @@
 import type { ComponentType } from "react";
-import { BookOpen, ExternalLink, Facebook, Grid3X3, Instagram, MessageCircle, Settings, Sparkles } from "lucide-react";
+import { BookOpen, ExternalLink, Facebook, Grid3X3, Instagram, MessageCircle, Settings, Sparkles, Youtube } from "lucide-react";
 import { notebooks } from "../../data/notebooks";
 
 export type Section = "tools" | "notebooks" | "gems" | "extensions" | "settings";
 
 const SOCIAL_LINKS = [
   {
-    href: "https://www.facebook.com/groups/digitalnarrative",
+    href: "https://www.facebook.com/Journal.of.Digital.Narrative/",
     icon: Facebook,
     label: "Facebook"
   },
   {
-    href: "https://www.instagram.com/journal.digital.narrative",
+    href: "https://www.instagram.com/journal_of_digital_narrative/",
     icon: Instagram,
     label: "Instagram"
   },
   {
-    href: "https://www.threads.net/@journal.digital.narrative",
+    href: "https://www.threads.com/@journal_of_digital_narrative?hl=zh-tw",
     icon: MessageCircle,
     label: "Threads"
+  },
+  {
+    href: "https://www.youtube.com/@Journal_of_Digital_Narrative",
+    icon: Youtube,
+    label: "YouTube"
   }
 ];
 
