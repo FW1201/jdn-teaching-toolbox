@@ -246,6 +246,7 @@ export function GroupMaker({ state, setState }: ToolProps) {
 export function RoleAssigner({ state, setState }: ToolProps) {
   const { roster } = useRoster();
   const { downloadText } = useExport();
+  const { notify } = useToast();
   const value = mergeState(state, { roles: "主持\n記錄\n報告\n時間管理", groupCount: 4, assignments: [] as Array<{ group: string; student: string; role: string }> });
   const roles = textLines(value.roles);
 
