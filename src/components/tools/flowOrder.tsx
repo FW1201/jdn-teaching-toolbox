@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { ComponentType, CSSProperties } from "react";
-import { Bell, CircleDot, Download, Layers, Moon, Move, Play, Plus, RotateCcw, Save, Trash2, Users } from "lucide-react";
+import { ArrowDown, ArrowUp, Bell, CircleDot, Download, Layers, Moon, Play, Plus, RotateCcw, Save, Trash2, Users } from "lucide-react";
 import { useExport } from "../../providers/ExportProvider";
+import { useToast } from "../../hooks/useToast";
 import { InputField, Panel, TextAreaField, exportElementAsPng, formatSeconds, mergeState } from "../shared";
 import type { ToolProps } from "../shared";
 
