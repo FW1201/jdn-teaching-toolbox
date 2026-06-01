@@ -64,6 +64,8 @@ export function ClozeTool({ state, setState }: ToolProps) {
 export function SentenceScramble({ state, setState }: ToolProps) {
   const value = mergeState(state, { sentence: "學生 在 課堂 中 透過 討論 建構 理解", pieces: [] as string[] });
   const pieces = value.pieces.length ? value.pieces : shuffle(value.sentence.split(/\s+/).filter(Boolean));
+  const target = value.sentence.trim().split(/\s+/).filter(Boolean).join(" ");
+  const isCorrect = pieces.length > 0 && pieces.join(" ") === target;
 
   function move(from: number, to: number) {
     const next = [...pieces];
