@@ -51,8 +51,9 @@ export function FlowBoard({ state, setState }: ToolProps) {
               <input value={item.label} onChange={(event) => update({ ...value, items: value.items.map((entry) => (entry.id === item.id ? { ...entry, label: event.target.value } : entry)) })} />
               <input className="short-input" type="number" min={1} value={item.minutes} onChange={(event) => update({ ...value, items: value.items.map((entry) => (entry.id === item.id ? { ...entry, minutes: Number(event.target.value) } : entry)) })} />
               <input value={item.materials} onChange={(event) => update({ ...value, items: value.items.map((entry) => (entry.id === item.id ? { ...entry, materials: event.target.value } : entry)) })} />
-              <button className="icon-only" onClick={() => move(index, -1)}><Move size={16} /></button>
-              <button className="icon-only" onClick={() => update({ ...value, items: value.items.filter((entry) => entry.id !== item.id) })}><Trash2 size={16} /></button>
+              <button className="icon-only" disabled={index === 0} onClick={() => move(index, -1)} aria-label="上移"><ArrowUp size={16} /></button>
+              <button className="icon-only" disabled={index === value.items.length - 1} onClick={() => move(index, 1)} aria-label="下移"><ArrowDown size={16} /></button>
+              <button className="icon-only" onClick={() => update({ ...value, items: value.items.filter((entry) => entry.id !== item.id) })} aria-label="刪除步驟"><Trash2 size={16} /></button>
             </div>
           ))}
         </div>
