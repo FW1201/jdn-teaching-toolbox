@@ -169,6 +169,7 @@ export function CardSort({ state, setState }: ToolProps) {
 }
 
 export function ConceptMap({ state, setState }: ToolProps) {
+  const { notify } = useToast();
   const value = mergeState(state, { nodes: "數位敘事\n媒體\n故事\n受眾", links: "數位敘事,結合,媒體\n數位敘事,組織,故事\n故事,影響,受眾" });
   const nodes = textLines(value.nodes);
   const links = textLines(value.links).map((line) => line.split(/,|，/).map((part) => part.trim()));
