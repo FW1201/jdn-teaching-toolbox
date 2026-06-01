@@ -205,8 +205,8 @@ export function ParticipationTracker({ state, setState }: ToolProps) {
         <InputField label="事件類型" value={value.eventType} onChange={(eventType) => setState({ ...value, eventType })} />
         <div className="student-button-grid">{roster.map((student) => <button key={student.id} onClick={() => record(student)}>{student.seatNo} {student.name}<span>{value.counts[student.id] ?? 0}</span></button>)}</div>
       </Panel>
-      <Panel title="低參與提醒" action={<button className="ghost-button" onClick={() => downloadText("participation.csv", ["時間,座號,姓名,事件", ...value.history].join("\n"), "text/csv;charset=utf-8")}><Download size={16} />CSV</button>}>
-        <div className="result-list">{sorted.slice(0, 8).map((student) => <div className="result-row" key={student.id}><span>{student.seatNo} {student.name}</span><strong>{value.counts[student.id] ?? 0}</strong></div>)}</div>
+      <Panel title="參與次數排序（少→多）" action={<button className="ghost-button" onClick={() => { downloadText("participation.csv", ["時間,座號,姓名,事件", ...value.history].join("\n"), "text/csv;charset=utf-8"); notify("已匯出參與紀錄 CSV", "success"); }}><Download size={16} />CSV</button>}>
+        <div className="result-list scroll">{sorted.map((student) => <div className={`result-row${(value.counts[student.id] ?? 0) === 0 ? " is-zero" : ""}`} key={student.id}><span>{student.seatNo} {student.name}</span><strong>{value.counts[student.id] ?? 0}</strong></div>)}</div>
       </Panel>
     </div>
   );
