@@ -247,13 +247,16 @@ export function TaskChecklist({ state, setState }: ToolProps) {
         <div className="check-matrix" style={{ "--task-count": tasks.length } as CSSProperties}>
           <div />
           {tasks.map((task) => <strong key={task}>{task}</strong>)}
-          {groups.flatMap((group) => [
-            <strong key={`${group}-label`}>{group}</strong>,
-            ...tasks.map((task) => {
-              const key = `${group}:${task}`;
-              return <button key={key} className={value.done[key] ? "checked" : ""} onClick={() => toggle(group, task)}>{value.done[key] ? <Check size={18} /> : ""}</button>;
-            })
-          ])}
+          {groups.flatMap((group) => {
+            const doneCount = tasks.filter((task) => value.done[`${group}:${task}`]).length;
+            return [
+              <strong key={`${group}-label`}>{group}<small className="matrix-progress">{doneCount}/{tasks.length}</small></strong>,
+              ...tasks.map((task) => {
+                const key = `${group}:${task}`;
+                return <button key={key} className={value.done[key] ? "checked" : ""} onClick={() => toggle(group, task)}>{value.done[key] ? <Check size={18} /> : ""}</button>;
+              })
+            ];
+          })}
         </div>
       </Panel>
     </div>
