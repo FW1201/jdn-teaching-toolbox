@@ -1462,3 +1462,247 @@ h3 {
     min-width: 0;
   }
 }
+
+/* ============================================================
+   Phase 1 — 跨工具設計系統增強（後置覆蓋；尊重 reduce-motion）
+   寬螢幕版型 · 互動動效 · hover/focus 一致性 · 拖放回饋 · Toast
+   ============================================================ */
+
+/* 1A. 善用寬螢幕：內容置中並設上限，避免超寬螢幕橫向拉滿難閱讀 */
+.main-panel > .topbar,
+.main-panel > .tool-results,
+.main-panel > .toolbar,
+.main-panel > .category-chips,
+.main-panel > .workflow-shortcuts,
+.main-panel > .showcase-stats,
+.main-panel > .workspace,
+.main-panel > .page-section {
+  max-width: var(--content-max);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* 投影工作區左設定欄不過寬、右投影區吃滿剩餘空間 */
+@media (min-width: 1121px) {
+  .tool-grid {
+    grid-template-columns: minmax(320px, 0.66fr) minmax(0, 1.34fr);
+  }
+}
+
+/* 1440px+ 大螢幕優化層：卡片更密、投影更大、留白收斂 */
+@media (min-width: 1440px) {
+  .main-panel {
+    padding: 28px 36px;
+  }
+  .tool-card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 18px;
+  }
+  .resource-grid {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 18px;
+  }
+  .projection-card,
+  .timer-display,
+  .poll-card,
+  .qr-card,
+  .worksheet-preview {
+    min-height: 420px;
+  }
+  .tool-layout {
+    grid-template-columns: minmax(0, 1fr) 340px;
+  }
+}
+
+/* 1B/1D. 過場與 hover 一致性 ------------------------------------ */
+.primary-button,
+.secondary-button,
+.ghost-button,
+.icon-text,
+.danger-button,
+.star-button,
+.icon-only {
+  transition: transform 0.16s var(--ease), box-shadow 0.16s var(--ease),
+    background-color 0.16s var(--ease), border-color 0.16s var(--ease), color 0.16s var(--ease);
+}
+
+.primary-button:hover {
+  box-shadow: 0 10px 26px rgba(0, 212, 255, 0.32);
+  transform: translateY(-1px);
+}
+.secondary-button:hover,
+.ghost-button:hover,
+.icon-text:hover,
+.icon-only:hover {
+  border-color: var(--line-strong);
+  background: rgba(0, 212, 255, 0.08);
+}
+.danger-button:hover {
+  background: rgba(255, 84, 112, 0.2);
+  border-color: var(--danger);
+}
+.primary-button:active,
+.secondary-button:active,
+.ghost-button:active,
+.icon-text:active,
+.danger-button:active,
+.icon-only:active {
+  transform: translateY(1px) scale(0.99);
+}
+.primary-button:disabled:hover,
+.secondary-button:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* 鍵盤可及性：清楚的 focus-visible 環 */
+:where(button, a, input, textarea, select):focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* 卡片懸停浮起 */
+.tool-card,
+.resource-card,
+.extension-card {
+  transition: transform 0.18s var(--ease), box-shadow 0.18s var(--ease), border-color 0.18s var(--ease);
+}
+.tool-card:hover,
+.resource-card:hover,
+.extension-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-hover);
+  border-color: var(--line-strong);
+}
+
+/* 互動格元素（座位、量尺、符號、轉盤項目）統一過場與懸停 */
+.seat,
+.meter-card,
+.symbol-card,
+.traffic-dot,
+.flow-item,
+.flashcard,
+.quick-buttons button,
+.student-button-grid button,
+.poll-row button,
+.score-row button {
+  transition: transform 0.14s var(--ease), background-color 0.16s var(--ease),
+    border-color 0.16s var(--ease), box-shadow 0.16s var(--ease);
+}
+.seat:hover,
+.meter-card:hover,
+.symbol-card:hover,
+.student-button-grid button:hover {
+  transform: translateY(-2px);
+  border-color: var(--line-strong);
+}
+.meter-card:active,
+.seat:active,
+.poll-row button:active,
+.score-row button:active,
+.quick-buttons button:active {
+  transform: scale(0.96);
+}
+
+/* 選中態強化（沿用 active class） */
+.quick-buttons button.active,
+.symbol-card.active,
+.traffic-dot.active {
+  box-shadow: inset 0 0 0 2px var(--line-strong);
+}
+
+/* 翻牌卡：平滑翻轉感（透過 active class 與點擊縮放） */
+.flashcard:active {
+  transform: scale(0.99);
+}
+
+/* 1C/視覺. 拖放回饋：drop zone 高亮 ---------------------------- */
+.sort-column.drop-active,
+.piece-board.drop-active {
+  border-color: var(--primary);
+  background: rgba(0, 212, 255, 0.08);
+  box-shadow: inset 0 0 0 1px var(--line-strong);
+}
+[draggable="true"] {
+  cursor: grab;
+}
+[draggable="true"]:active {
+  cursor: grabbing;
+  opacity: 0.65;
+}
+
+/* Toast 操作回饋 ------------------------------------------------ */
+.toast-stack {
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 60;
+  display: grid;
+  gap: 8px;
+  pointer-events: none;
+}
+.toast {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 200px;
+  max-width: 360px;
+  padding: 11px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: rgba(13, 17, 23, 0.96);
+  color: var(--text);
+  box-shadow: var(--shadow-soft);
+  font-size: 0.9rem;
+  animation: toast-in 0.22s var(--ease);
+}
+.toast.success { border-color: rgba(57, 217, 138, 0.6); }
+.toast.error { border-color: var(--danger); }
+.toast .toast-icon { color: var(--primary); display: inline-flex; }
+.toast.success .toast-icon { color: var(--green); }
+.toast.error .toast-icon { color: var(--danger); }
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 鍵盤快捷提示 chip */
+.shortcut-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+.shortcut-hint kbd {
+  padding: 2px 7px;
+  border: 1px solid var(--line);
+  border-bottom-width: 2px;
+  border-radius: 6px;
+  background: rgba(13, 17, 23, 0.7);
+  color: var(--text);
+  font-size: 0.74rem;
+}
+
+/* 剩餘人數 / 統計小標 */
+.tool-meta-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 14px;
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+.tool-meta-line strong { color: var(--text); }
+
+/* 計時器結束預警脈動（reduce-motion 會自動停用） */
+.timer-display.is-warning strong,
+.timer-display.is-warning .timer-ring span {
+  color: var(--accent);
+  animation: pulse-warn 1s ease-in-out infinite;
+}
+@keyframes pulse-warn {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
