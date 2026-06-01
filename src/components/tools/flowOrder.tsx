@@ -88,6 +88,8 @@ export function FlowBoard({ state, setState }: ToolProps) {
 export function Countdown({ state, setState, visual }: ToolProps & { visual: boolean }) {
   const value = mergeState(state, { minutes: visual ? 8 : 5, secondsLeft: (visual ? 8 : 5) * 60, running: false, message: visual ? "輪站活動" : "時間到", silent: true });
   const [tick, setTick] = useState(0);
+  const { notify } = useToast();
+  const prevSeconds = useRef(value.secondsLeft);
 
   useEffect(() => {
     if (!value.running || value.secondsLeft <= 0) return undefined;
@@ -98,10 +100,35 @@ export function Countdown({ state, setState, visual }: ToolProps & { visual: boo
     return () => window.clearInterval(id);
   }, [setState, tick, value]);
 
+  // 跨越歸零時提示「時間到」
+  useEffect(() => {
+    if (prevSeconds.current > 0 && value.secondsLeft === 0) {
+      notify(value.message || "時間到！", "info");
+    }
+    prevSeconds.current = value.secondsLeft;
+  }, [value.secondsLeft, value.message, notify]);
+
+  // 鍵盤快捷：空白鍵=開始/暫停、R=重設（輸入框聚焦時不攔截）
+  useEffect(() => {
+    function onKey(event: KeyboardEvent) {
+      const target = event.target as HTMLElement | null;
+      if (target && /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName)) return;
+      if (event.code === "Space") {
+        event.preventDefault();
+        setState({ ...value, running: !value.running });
+      } else if (event.key === "r" || event.key === "R") {
+        setState({ ...value, secondsLeft: value.minutes * 60, running: false });
+      }
+    }
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [setState, value]);
+
   const total = Math.max(1, value.minutes * 60);
   const progress = Math.max(0, Math.min(100, (value.secondsLeft / total) * 100));
   const mm = String(Math.floor(value.secondsLeft / 60)).padStart(2, "0");
   const ss = String(value.secondsLeft % 60).padStart(2, "0");
+  const warning = value.running && value.secondsLeft > 0 && value.secondsLeft <= 10;
 
   function reset(minutes = value.minutes) {
     setState({ ...value, minutes, secondsLeft: minutes * 60, running: false });
@@ -125,7 +152,7 @@ export function Countdown({ state, setState, visual }: ToolProps & { visual: boo
         </label>
       </Panel>
       <Panel title={visual ? "視覺計時" : "倒數投影"}>
-        <div className={visual ? "timer-display visual" : "timer-display"}>
+        <div className={`${visual ? "timer-display visual" : "timer-display"}${warning ? " is-warning" : ""}`}>
           {visual ? (
             <div className="timer-ring" style={{ "--progress": `${progress}%` } as CSSProperties}>
               <span>{mm}:{ss}</span>
@@ -133,7 +160,7 @@ export function Countdown({ state, setState, visual }: ToolProps & { visual: boo
           ) : (
             <strong>{mm}:{ss}</strong>
           )}
-          <p>{value.secondsLeft === 0 ? value.message : "剩餘時間"}</p>
+          <p>{value.secondsLeft === 0 ? value.message : warning ? "即將結束" : "剩餘時間"}</p>
           <div className="progress-track">
             <span style={{ width: `${progress}%` }} />
           </div>
@@ -149,6 +176,7 @@ export function Countdown({ state, setState, visual }: ToolProps & { visual: boo
           </button>
           {!value.silent && value.secondsLeft === 0 && <Bell size={22} className="bell" />}
         </div>
+        <p className="shortcut-hint"><kbd>空白鍵</kbd> 開始/暫停 · <kbd>R</kbd> 重設</p>
       </Panel>
     </div>
   );
