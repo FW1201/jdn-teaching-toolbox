@@ -13,7 +13,12 @@ import type { ToolProps } from "../shared";
 
 export function QuickPoll({ state, setState }: ToolProps) {
   const { downloadText } = useExport();
+  const { notify } = useToast();
   const value = mergeState(state, { question: "你覺得今天最需要再複習的是？", options: ["概念", "例題", "操作", "合作"], votes: [0, 0, 0, 0] });
+
+  function addVote(index: number, delta: number) {
+    setState({ ...value, votes: value.votes.map((vote, voteIndex) => (voteIndex === index ? Math.max(0, vote + delta) : vote)) });
+  }
   const max = Math.max(1, ...value.votes);
   const csv = ["選項,票數", ...value.options.map((option, index) => [option, String(value.votes[index] ?? 0)].map(escapeCsv).join(","))].join("\n");
 
