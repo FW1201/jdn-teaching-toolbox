@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import type { CSSProperties } from "react";
-import { Check, Copy, Download, Plus, QrCode, Trash2 } from "lucide-react";
+import { Check, Copy, Download, Minus, Plus, QrCode, Trash2 } from "lucide-react";
 import QRCode from "qrcode";
 import { copyToClipboard, escapeCsv, textLines } from "../../lib/toolLogic";
 import type { Student } from "../../lib/types";
 import { useExport } from "../../providers/ExportProvider";
 import { useRoster } from "../../providers/RosterProvider";
+import { useToast } from "../../hooks/useToast";
+import { ConfirmButton } from "../ui/ConfirmButton";
 import { InputField, Panel, TextAreaField, mergeState } from "../shared";
 import type { ToolProps } from "../shared";
 
