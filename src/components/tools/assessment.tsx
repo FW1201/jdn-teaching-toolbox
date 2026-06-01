@@ -163,9 +163,9 @@ export function Scoreboard({ state, setState }: ToolProps) {
     <div className="tool-grid">
       <Panel title="隊伍設定">
         <TextAreaField label="每行一隊" value={value.teamsText} onChange={(teamsText) => setState({ ...value, teamsText })} />
-        <button className="secondary-button" onClick={() => setState({ ...value, scores: {}, history: [] })}>重設分數</button>
+        <ConfirmButton className="secondary-button" onConfirm={() => { setState({ ...value, scores: {}, history: [] }); notify("已重設所有分數"); }}>重設分數</ConfirmButton>
       </Panel>
-      <Panel title="投影排名" action={<button className="ghost-button" onClick={() => downloadText("scoreboard.csv", csv, "text/csv;charset=utf-8")}><Download size={16} />CSV</button>}>
+      <Panel title="投影排名" action={<button className="ghost-button" onClick={() => { downloadText("scoreboard.csv", csv, "text/csv;charset=utf-8"); notify("已匯出計分結果 CSV", "success"); }}><Download size={16} />CSV</button>}>
         <div className="score-list">
           {ranking.map((team, index) => (
             <div className="score-row" key={team}>
