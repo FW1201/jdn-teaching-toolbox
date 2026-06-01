@@ -30,7 +30,15 @@ export function NumberCoordinate({ state, setState }: ToolProps) {
           </div>
         ) : (
           <svg className="coordinate-board" viewBox="0 0 500 500">
-            <line x1="250" y1="30" x2="250" y2="470" /><line x1="30" y1="250" x2="470" y2="250" />
+            <g className="grid">
+              {Array.from({ length: 13 }, (_, i) => 30 + i * 36.6).map((pos) => (
+                <g key={`grid-${pos}`}>
+                  <line x1={pos} y1="30" x2={pos} y2="470" />
+                  <line x1="30" y1={pos} x2="470" y2={pos} />
+                </g>
+              ))}
+            </g>
+            <line className="axis-line" x1="250" y1="30" x2="250" y2="470" /><line className="axis-line" x1="30" y1="250" x2="470" y2="250" />
             {points.map(([label, x, y]) => <g key={label}><circle cx={250 + Number(x) * 18} cy={250 - Number(y) * 18} r="8" /><text x={260 + Number(x) * 18} y={245 - Number(y) * 18}>{label}({x},{y})</text></g>)}
           </svg>
         )}
