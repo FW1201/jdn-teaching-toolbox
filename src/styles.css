@@ -14,7 +14,8 @@
   --yellow: #ffd166;
   --danger: #ff5470;
   --radius: 8px;
-  --radius-lg: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 999px;
   --content-max: 1640px;
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
   --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.2);
