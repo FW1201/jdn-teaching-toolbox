@@ -59,6 +59,7 @@ export function FractionTiles({ state, setState }: ToolProps) {
           {value.mode === "長條" && pieces.map((filled, index) => <span key={index} className={filled ? "filled" : ""} />)}
         </div>
         <div className="fraction-label">{value.numerator} / {value.denominator}</div>
+        <div className="tool-meta-line" style={{ justifyContent: "center" }}><span>≈ <strong>{decimal.toFixed(3).replace(/\.?0+$/, "")}</strong></span><span><strong>{percent}%</strong></span></div>
       </Panel>
     </div>
   );
