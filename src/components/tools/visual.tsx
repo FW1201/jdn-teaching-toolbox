@@ -182,7 +182,7 @@ export function ConceptMap({ state, setState }: ToolProps) {
         <TextAreaField label="節點" value={value.nodes} onChange={(nodesText) => setState({ ...value, nodes: nodesText })} />
         <TextAreaField label="連線：A,關係,B" value={value.links} onChange={(linksText) => setState({ ...value, links: linksText })} />
       </Panel>
-      <Panel title="概念圖" action={<button className="ghost-button" onClick={() => exportElementAsPng("concept-map-export", "concept-map.png")}><Download size={16} />PNG</button>}>
+      <Panel title="概念圖" action={<button className="ghost-button" onClick={() => { void exportElementAsPng("concept-map-export", "concept-map.png"); notify("已匯出概念圖 PNG", "success"); }}><Download size={16} />PNG</button>}>
         <svg className="concept-svg" id="concept-map-export" viewBox="0 0 720 460">
           {links.map(([from, label, to], index) => {
             const fromIndex = Math.max(0, nodes.indexOf(from));
