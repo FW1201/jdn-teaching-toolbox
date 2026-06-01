@@ -186,6 +186,7 @@ export function StopwatchTool({ state, setState }: ToolProps) {
   const value = mergeState(state, { elapsed: 0, running: false, laps: [] as Array<{ id: string; label: string; time: number }> });
   const [tick, setTick] = useState(0);
   const { downloadText } = useExport();
+  const { notify } = useToast();
 
   useEffect(() => {
     if (!value.running) return undefined;
