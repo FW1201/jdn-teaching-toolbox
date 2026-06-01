@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import type { ComponentType, CSSProperties } from "react";
-import { Bell, CircleDot, Download, Layers, Move, Play, Plus, RotateCcw, Save, Trash2, Users } from "lucide-react";
+import { Bell, CircleDot, Download, Layers, Moon, Move, Play, Plus, RotateCcw, Save, Trash2, Users } from "lucide-react";
 import { useExport } from "../../providers/ExportProvider";
 import { InputField, Panel, TextAreaField, exportElementAsPng, formatSeconds, mergeState } from "../shared";
 import type { ToolProps } from "../shared";
