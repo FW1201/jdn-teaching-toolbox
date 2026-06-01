@@ -1,4 +1,4 @@
-import type { DragEvent, ReactNode } from "react";
+import type { DragEvent } from "react";
 import { Shuffle } from "lucide-react";
 import { createWordSearch, createBingoCards, shuffle, textLines } from "../../lib/toolLogic";
 import { InputField, Panel, TextAreaField, mergeState } from "../shared";
