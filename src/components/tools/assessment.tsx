@@ -40,12 +40,13 @@ export function QuickPoll({ state, setState }: ToolProps) {
         </div>
         <button className="secondary-button" onClick={() => setState({ ...value, options: [...value.options, `選項 ${value.options.length + 1}`], votes: [...value.votes, 0] })}><Plus size={16} />新增選項</button>
       </Panel>
-      <Panel title="投影統計" action={<button className="ghost-button" onClick={() => downloadText("poll.csv", csv, "text/csv;charset=utf-8")}><Download size={16} />CSV</button>}>
+      <Panel title="投影統計" action={<button className="ghost-button" onClick={() => { downloadText("poll.csv", csv, "text/csv;charset=utf-8"); notify("已匯出投票結果 CSV", "success"); }}><Download size={16} />CSV</button>}>
         <div className="poll-card">
           <h3>{value.question}</h3>
           {value.options.map((option, index) => (
             <div className="poll-row" key={option}>
-              <button onClick={() => setState({ ...value, votes: value.votes.map((vote, voteIndex) => (voteIndex === index ? vote + 1 : vote)) })}>+1</button>
+              <button onClick={() => addVote(index, -1)} aria-label="減一票"><Minus size={15} /></button>
+              <button onClick={() => addVote(index, 1)}>+1</button>
               <span>{option}</span>
               <div className="bar"><i style={{ width: `${((value.votes[index] ?? 0) / max) * 100}%` }} /></div>
               <strong>{value.votes[index] ?? 0}</strong>
