@@ -94,8 +94,8 @@ export function SeatingChart({ state, setState }: ToolProps) {
         title="座位表"
         action={
           <>
-            <button className="ghost-button" onClick={() => downloadText("seating-chart.csv", `列,欄,座號,姓名\n${csv}`, "text/csv;charset=utf-8")}><Download size={16} />CSV</button>
-            <button className="ghost-button" onClick={() => exportElementAsPng("seating-export", "seating-chart.png")}><Printer size={16} />PNG</button>
+            <button className="ghost-button" onClick={() => { downloadText("seating-chart.csv", `列,欄,座號,姓名\n${csv}`, "text/csv;charset=utf-8"); notify("已匯出座位表 CSV", "success"); }}><Download size={16} />CSV</button>
+            <button className="ghost-button" onClick={() => { void exportElementAsPng("seating-export", "seating-chart.png"); notify("已匯出座位表 PNG", "success"); }}><Printer size={16} />PNG</button>
           </>
         }
       >
