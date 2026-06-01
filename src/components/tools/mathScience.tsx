@@ -42,6 +42,8 @@ export function NumberCoordinate({ state, setState }: ToolProps) {
 export function FractionTiles({ state, setState }: ToolProps) {
   const value = mergeState(state, { numerator: 3, denominator: 8, mode: "長條" });
   const pieces = Array.from({ length: Math.max(1, value.denominator) }, (_, index) => index < value.numerator);
+  const decimal = value.denominator ? value.numerator / value.denominator : 0;
+  const percent = Math.round(decimal * 1000) / 10;
 
   return (
     <div className="tool-grid">
