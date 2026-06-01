@@ -245,7 +245,7 @@ export function WorkSymbols({ state, setState }: ToolProps) {
       { id: "teacher", label: "可問老師", hint: "先問組員，再問老師", symbol: "Bell" }
     ]
   });
-  const iconMap: Record<string, ComponentType<{ size?: number }>> = { Users, Layers, Bell };
+  const iconMap: Record<string, ComponentType<{ size?: number }>> = { Moon, Users, Layers, Bell };
 
   return (
     <div className="tool-grid">
