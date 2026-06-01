@@ -898,7 +898,7 @@ h3 {
 
 .poll-row,
 .score-row {
-  grid-template-columns: auto minmax(100px, 1fr) minmax(120px, 1fr) 54px;
+  grid-template-columns: auto auto minmax(100px, 1fr) minmax(120px, 1fr) 54px;
 }
 
 .poll-row {
