@@ -4,6 +4,7 @@ import { App } from "./App";
 import { ExportProvider } from "./providers/ExportProvider";
 import { RosterProvider } from "./providers/RosterProvider";
 import { SettingsProvider } from "./providers/SettingsProvider";
+import { ToastProvider } from "./hooks/useToast";
 import { clearState, loadState, saveState } from "./lib/storage";
 import type { Student, ToolboxBackup, ToolboxSettings } from "./lib/types";
 import "./styles.css";
