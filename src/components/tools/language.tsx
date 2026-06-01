@@ -152,6 +152,3 @@ export function StoryDice({ state, setState }: ToolProps) {
     </div>
   );
 }
-
-// `ReactNode` re-export kept for parity with original module typing expectations.
-export type { ReactNode };
