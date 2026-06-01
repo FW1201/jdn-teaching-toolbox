@@ -61,7 +61,9 @@ function Root() {
     <RosterProvider key={`${providerKey}-roster`} initialRoster={persisted.roster} onChange={persistRoster}>
       <SettingsProvider key={`${providerKey}-settings`} initialSettings={persisted.settings} onChange={persistSettings}>
         <ExportProvider>
-          <App initialToolState={persisted.toolState} onToolStateChange={persistToolState} onResetAll={resetAll} onRestoreBackup={restoreBackup} />
+          <ToastProvider>
+            <App initialToolState={persisted.toolState} onToolStateChange={persistToolState} onResetAll={resetAll} onRestoreBackup={restoreBackup} />
+          </ToastProvider>
         </ExportProvider>
       </SettingsProvider>
     </RosterProvider>
