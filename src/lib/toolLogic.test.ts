@@ -1,12 +1,18 @@
 import { describe, expect, it } from "vitest";
-import { buildGroups, createBingoCards, createSeatingCells, createWordSearch, parseRoster, rosterToCsv } from "./toolLogic";
+import { buildGroups, createBingoCards, createSeatingCells, createWordSearch, parseRoster, rosterToCsv, stableStudentId } from "./toolLogic";
 
 describe("roster parsing", () => {
   it("parses csv rows with notes", () => {
     const roster = parseRoster("1,王小明,男,前排\n2,陳小華,女");
     expect(roster).toHaveLength(2);
-    expect(roster[0]).toMatchObject({ seatNo: "1", name: "王小明", gender: "男", note: "前排" });
+    expect(roster[0]).toMatchObject({ id: stableStudentId("1", "王小明"), seatNo: "1", name: "王小明", gender: "男", note: "前排" });
     expect(rosterToCsv(roster)).toContain("座號,姓名,性別,備註");
+  });
+
+  it("keeps stable student ids when the same roster is imported again", () => {
+    const first = parseRoster("1,王小明,男,前排\n2,陳小華,女");
+    const second = parseRoster("1,王小明,男,前排\n2,陳小華,女");
+    expect(second.map((student) => student.id)).toEqual(first.map((student) => student.id));
   });
 });
 

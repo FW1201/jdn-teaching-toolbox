@@ -44,6 +44,7 @@ import QRCode from "qrcode";
 import { toPng } from "html-to-image";
 import { extensions } from "./data/extensions";
 import { gems } from "./data/gems";
+import { notebookCategories, notebooks } from "./data/notebooks";
 import { lessonStages, toolCategories, toolsRegistry } from "./data/tools.registry";
 import type { LessonStage, ToolCategory, ToolDefinition } from "./data/tools.registry";
 import { createBackup } from "./lib/storage";
@@ -53,6 +54,7 @@ import {
   createBingoCards,
   createSeatingCells,
   createWordSearch,
+  escapeCsv,
   groupsToCsv,
   parseRoster,
   rosterToCsv,
@@ -64,7 +66,7 @@ import { useExport } from "./providers/ExportProvider";
 import { useRoster } from "./providers/RosterProvider";
 import { useSettings } from "./providers/SettingsProvider";
 
-type Section = "tools" | "gems" | "extensions" | "settings";
+type Section = "tools" | "notebooks" | "gems" | "extensions" | "settings";
 
 interface AppProps {
   initialToolState: Record<string, unknown>;
@@ -99,6 +101,13 @@ const categoryIcons: Record<ToolCategory, ComponentType<{ size?: number }>> = {
   視覺整理: Layers,
   數學與科學: CircleDot
 };
+
+const workflowShortcuts = [
+  { title: "建立名單", path: "班級名單中心 → 隨機抽人 / 隨機分組 / 座位表", toolIds: ["roster-center", "random-picker", "group-maker", "seating-chart"] },
+  { title: "課堂節奏", path: "今日流程板 → 倒數計時器 → 交通燈 / 工作模式", toolIds: ["flow-board", "countdown", "traffic-light", "work-symbols"] },
+  { title: "小組任務", path: "隨機分組 → 角色分配 → 計分板 → 任務檢核", toolIds: ["group-maker", "role-assigner", "scoreboard", "task-checklist"] },
+  { title: "語文活動", path: "字詞卡 → 克漏字 → 句子重組 → 賓果", toolIds: ["flashcards", "cloze", "sentence-scramble", "bingo"] }
+];
 
 export function App({ initialToolState, onToolStateChange, onResetAll, onRestoreBackup }: AppProps) {
   const { roster } = useRoster();
@@ -169,6 +178,7 @@ export function App({ initialToolState, onToolStateChange, onResetAll, onRestore
           <div>
             <p className="eyebrow">Journal of Digital Narrative</p>
             <h1>數位敘事力教學工具箱</h1>
+            <p className="topbar-subtitle">數位敘事力整合開發成果展示區：自建課堂工具、NotebookLM、Gems 與 Chrome 擴充功能。</p>
           </div>
           <div className="top-actions">
             <button className="icon-text" onClick={() => updateSettings({ projectionMode: !settings.projectionMode })}>
@@ -184,32 +194,32 @@ export function App({ initialToolState, onToolStateChange, onResetAll, onRestore
 
         {section === "tools" && !activeTool && (
           <>
+            <ShowcaseStats />
             <ToolsToolbar filter={filter} setFilter={setFilter} subjects={subjects} />
-            <section className="content-grid">
-              <CategoryRail filter={filter} setFilter={setFilter} />
-              <div className="tool-results">
-                <div className="result-heading">
-                  <div>
-                    <h2>課堂工具</h2>
-                    <p>{filteredTools.length} / {toolsRegistry.length} 個自建工具，全部在本站內操作。</p>
-                  </div>
-                  <button className="ghost-button" onClick={() => setFilter(defaultFilter)}>
-                    <RotateCcw size={16} />
-                    重設篩選
-                  </button>
+            <CategoryChips filter={filter} setFilter={setFilter} />
+            <WorkflowShortcuts openTool={openTool} />
+            <section className="tool-results">
+              <div className="result-heading">
+                <div>
+                  <h2>課堂工具</h2>
+                  <p>{filteredTools.length} / {toolsRegistry.length} 個自建工具，全部在本站內操作。</p>
                 </div>
-                <div className="tool-card-grid">
-                  {filteredTools.map((tool) => (
-                    <ToolCard
-                      key={tool.id}
-                      tool={tool}
-                      isFavorite={settings.favoriteToolIds.includes(tool.id)}
-                      isRecent={settings.recentToolIds.includes(tool.id)}
-                      onOpen={() => openTool(tool.id)}
-                      onFavorite={() => toggleFavorite(tool.id)}
-                    />
-                  ))}
-                </div>
+                <button className="ghost-button" onClick={() => setFilter(defaultFilter)}>
+                  <RotateCcw size={16} />
+                  重設篩選
+                </button>
+              </div>
+              <div className="tool-card-grid">
+                {filteredTools.map((tool) => (
+                  <ToolCard
+                    key={tool.id}
+                    tool={tool}
+                    isFavorite={settings.favoriteToolIds.includes(tool.id)}
+                    isRecent={settings.recentToolIds.includes(tool.id)}
+                    onOpen={() => openTool(tool.id)}
+                    onFavorite={() => toggleFavorite(tool.id)}
+                  />
+                ))}
               </div>
             </section>
           </>
@@ -221,11 +231,13 @@ export function App({ initialToolState, onToolStateChange, onResetAll, onRestore
             toolState={toolState}
             updateToolState={updateToolState}
             onBack={() => setActiveToolId(null)}
+            onOpenTool={openTool}
             onFavorite={() => toggleFavorite(activeTool.id)}
             isFavorite={settings.favoriteToolIds.includes(activeTool.id)}
           />
         )}
 
+        {section === "notebooks" && <NotebooksPage />}
         {section === "gems" && <GemsPage />}
         {section === "extensions" && <ExtensionsPage />}
         {section === "settings" && <SettingsPage toolState={toolState} onResetAll={onResetAll} onRestoreBackup={onRestoreBackup} />}
@@ -237,6 +249,7 @@ export function App({ initialToolState, onToolStateChange, onResetAll, onRestore
 function Sidebar({ section, setSection, totalTools }: { section: Section; setSection: (section: Section) => void; totalTools: number }) {
   const items: Array<{ id: Section; label: string; icon: ComponentType<{ size?: number }>; meta: string }> = [
     { id: "tools", label: "課堂工具", icon: Grid3X3, meta: `${totalTools} 個` },
+    { id: "notebooks", label: "NotebookLM 筆記本", icon: BookOpen, meta: `${notebooks.length} 本` },
     { id: "gems", label: "Gems 資源", icon: Sparkles, meta: "AI/Gemini" },
     { id: "extensions", label: "Chrome 擴充功能", icon: ExternalLink, meta: "CWS" },
     { id: "settings", label: "我的設定", icon: Settings, meta: "本機資料" }
@@ -247,7 +260,7 @@ function Sidebar({ section, setSection, totalTools }: { section: Section; setSec
         <div className="brand-mark">JDN</div>
         <div>
           <strong>Teaching Toolbox</strong>
-          <span>自有課堂工具</span>
+          <span>整合成果展示區</span>
         </div>
       </div>
       <nav className="side-nav">
@@ -303,9 +316,9 @@ function SelectPill({ icon: Icon, label, value, options, onChange }: { icon: Com
   );
 }
 
-function CategoryRail({ filter, setFilter }: { filter: FilterState; setFilter: (filter: FilterState) => void }) {
+function CategoryChips({ filter, setFilter }: { filter: FilterState; setFilter: (filter: FilterState) => void }) {
   return (
-    <aside className="category-rail">
+    <section className="category-chips" aria-label="工具分類">
       <button className={filter.category === "全部" ? "active" : ""} onClick={() => setFilter({ ...filter, category: "全部" })}>
         <Grid3X3 size={18} />
         全部
@@ -319,7 +332,45 @@ function CategoryRail({ filter, setFilter }: { filter: FilterState; setFilter: (
           </button>
         );
       })}
-    </aside>
+    </section>
+  );
+}
+
+function ShowcaseStats() {
+  const stats = [
+    { value: toolsRegistry.length, label: "課堂工具" },
+    { value: notebooks.length, label: "NotebookLM" },
+    { value: gems.length, label: "Gems" },
+    { value: extensions.length, label: "Chrome Extensions" }
+  ];
+  return (
+    <section className="showcase-stats" aria-label="整合成果統計">
+      {stats.map((stat) => (
+        <div key={stat.label}>
+          <strong>{stat.value}</strong>
+          <span>{stat.label}</span>
+        </div>
+      ))}
+    </section>
+  );
+}
+
+function WorkflowShortcuts({ openTool }: { openTool: (toolId: string) => void }) {
+  return (
+    <section className="workflow-shortcuts" aria-label="常用課堂流程">
+      {workflowShortcuts.map((shortcut) => (
+        <article key={shortcut.title}>
+          <div>
+            <strong>{shortcut.title}</strong>
+            <span>{shortcut.path}</span>
+          </div>
+          <button className="ghost-button" onClick={() => openTool(shortcut.toolIds[0])}>
+            開始
+            <ChevronRight size={16} />
+          </button>
+        </article>
+      ))}
+    </section>
   );
 }
 
@@ -359,6 +410,7 @@ function ToolWorkspace({
   toolState,
   updateToolState,
   onBack,
+  onOpenTool,
   onFavorite,
   isFavorite
 }: {
@@ -366,6 +418,7 @@ function ToolWorkspace({
   toolState: Record<string, unknown>;
   updateToolState: <T>(toolId: string, value: T) => void;
   onBack: () => void;
+  onOpenTool: (toolId: string) => void;
   onFavorite: () => void;
   isFavorite: boolean;
 }) {
@@ -397,7 +450,7 @@ function ToolWorkspace({
 
       <div className="tool-layout">
         <section className="tool-main">
-          <ToolRenderer definition={definition} state={state} setState={(value) => updateToolState(definition.id, value)} />
+          <ToolRenderer definition={definition} state={state} setState={(value) => updateToolState(definition.id, value)} onOpenTool={onOpenTool} />
         </section>
         <aside className="tool-detail-panel">
           <h3>工具細節</h3>
@@ -420,13 +473,25 @@ function ToolWorkspace({
               <span key={item}>{item}</span>
             ))}
           </div>
+          <TemplateManager toolId={definition.id} state={state} onApply={(nextState) => updateToolState(definition.id, nextState)} />
+          {definition.canExport && (
+            <ExportButton
+              filename={`${definition.id}-state.json`}
+              data={{ toolId: definition.id, name: definition.name, exportedAt: new Date().toISOString(), state: state ?? null }}
+            />
+          )}
         </aside>
       </div>
     </section>
   );
 }
 
-function ToolRenderer({ definition, state, setState }: { definition: ToolDefinition; state: unknown; setState: (value: unknown) => void }) {
+function ToolRenderer({ definition, state, setState, onOpenTool }: { definition: ToolDefinition; state: unknown; setState: (value: unknown) => void; onOpenTool: (toolId: string) => void }) {
+  const { roster } = useRoster();
+  if (definition.needsRoster && roster.length === 0) {
+    return <RosterGate toolName={definition.name} onOpenRoster={() => onOpenTool("roster-center")} />;
+  }
+
   switch (definition.id) {
     case "flow-board":
       return <FlowBoard state={state} setState={setState} />;
@@ -497,6 +562,75 @@ function ToolRenderer({ definition, state, setState }: { definition: ToolDefinit
     default:
       return <GenericTool definition={definition} state={state} setState={setState} />;
   }
+}
+
+function RosterGate({ toolName, onOpenRoster }: { toolName: string; onOpenRoster: () => void }) {
+  return (
+    <section className="roster-gate">
+      <Users size={42} />
+      <div>
+        <p className="eyebrow">Roster required</p>
+        <h2>{toolName} 需要先匯入班級名單</h2>
+        <p>名單會供抽人、分組、座位表、計分與參與追蹤共用；資料只留在瀏覽器本機。</p>
+      </div>
+      <button className="primary-button" onClick={onOpenRoster}>
+        <Users size={17} />
+        前往班級名單中心
+      </button>
+    </section>
+  );
+}
+
+function ExportButton({ filename, data }: { filename: string; data: unknown }) {
+  const { downloadJson } = useExport();
+  return (
+    <button className="secondary-button full-width" onClick={() => downloadJson(filename, data)}>
+      <Download size={16} />
+      匯出目前工具資料
+    </button>
+  );
+}
+
+function TemplateManager({ toolId, state, onApply }: { toolId: string; state: unknown; onApply: (state: unknown) => void }) {
+  const storageKey = `jdn-toolbox-template:${toolId}`;
+  const [templates, setTemplates] = useState<Array<{ id: string; name: string; state: unknown }>>(() => {
+    try {
+      return JSON.parse(localStorage.getItem(storageKey) ?? "[]") as Array<{ id: string; name: string; state: unknown }>;
+    } catch {
+      return [];
+    }
+  });
+
+  function persist(nextTemplates: Array<{ id: string; name: string; state: unknown }>) {
+    setTemplates(nextTemplates);
+    localStorage.setItem(storageKey, JSON.stringify(nextTemplates));
+  }
+
+  function saveTemplate() {
+    const name = window.prompt("模板名稱", `模板 ${templates.length + 1}`);
+    if (!name) return;
+    persist([{ id: crypto.randomUUID(), name, state: state ?? null }, ...templates].slice(0, 8));
+  }
+
+  return (
+    <div className="template-manager">
+      <div className="detail-list">
+        <strong>本機模板</strong>
+      </div>
+      <button className="secondary-button full-width" onClick={saveTemplate}>
+        <Save size={16} />
+        儲存目前設定
+      </button>
+      {templates.map((template) => (
+        <div className="template-row" key={template.id}>
+          <button onClick={() => onApply(template.state)}>{template.name}</button>
+          <button className="icon-only" onClick={() => persist(templates.filter((item) => item.id !== template.id))} aria-label="刪除模板">
+            <Trash2 size={15} />
+          </button>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 function mergeState<T extends object>(state: unknown, fallback: T): T {
@@ -875,7 +1009,7 @@ function SeatingChart({ state, setState }: { state: unknown; setState: (value: u
   const studentMap = new Map(roster.map((student) => [student.id, student]));
   const csv = cells.map((cell) => {
     const student = cell.studentId ? studentMap.get(cell.studentId) : undefined;
-    return [cell.row + 1, cell.col + 1, student?.seatNo ?? "", student?.name ?? ""].join(",");
+    return [String(cell.row + 1), String(cell.col + 1), student?.seatNo ?? "", student?.name ?? ""].map(escapeCsv).join(",");
   }).join("\n");
 
   return (
@@ -1049,7 +1183,7 @@ function RoleAssigner({ state, setState }: { state: unknown; setState: (value: u
     setState({ ...value, assignments });
   }
 
-  const csv = ["組別,學生,角色", ...value.assignments.map((item) => [item.group, item.student, item.role].join(","))].join("\n");
+  const csv = ["組別,學生,角色", ...value.assignments.map((item) => [item.group, item.student, item.role].map(escapeCsv).join(","))].join("\n");
 
   return (
     <div className="tool-grid">
@@ -1072,7 +1206,7 @@ function QuickPoll({ state, setState }: { state: unknown; setState: (value: unkn
   const { downloadText } = useExport();
   const value = mergeState(state, { question: "你覺得今天最需要再複習的是？", options: ["概念", "例題", "操作", "合作"], votes: [0, 0, 0, 0] });
   const max = Math.max(1, ...value.votes);
-  const csv = ["選項,票數", ...value.options.map((option, index) => `${option},${value.votes[index] ?? 0}`)].join("\n");
+  const csv = ["選項,票數", ...value.options.map((option, index) => [option, String(value.votes[index] ?? 0)].map(escapeCsv).join(","))].join("\n");
 
   function updateOption(index: number, option: string) {
     setState({ ...value, options: value.options.map((item, itemIndex) => (itemIndex === index ? option : item)) });
@@ -1135,7 +1269,7 @@ function UnderstandingMeter({ state, setState }: { state: unknown; setState: (va
   const { downloadText } = useExport();
   const value = mergeState(state, { counts: [0, 0, 0, 0, 0], labels: ["完全不懂", "有點模糊", "大致理解", "可以練習", "能教別人"], note: "" });
   const total = value.counts.reduce((sum, count) => sum + count, 0);
-  const csv = ["分數,標籤,人數", ...value.labels.map((label, index) => `${index + 1},${label},${value.counts[index]}`)].join("\n");
+  const csv = ["分數,標籤,人數", ...value.labels.map((label, index) => [String(index + 1), label, String(value.counts[index])].map(escapeCsv).join(","))].join("\n");
 
   return (
     <div className="tool-grid">
@@ -1196,7 +1330,7 @@ function Scoreboard({ state, setState }: { state: unknown; setState: (value: unk
   }
 
   const ranking = [...teams].sort((a, b) => (value.scores[b] ?? 0) - (value.scores[a] ?? 0));
-  const csv = ["隊伍,分數", ...ranking.map((team) => `${team},${value.scores[team] ?? 0}`)].join("\n");
+  const csv = ["隊伍,分數", ...ranking.map((team) => [team, String(value.scores[team] ?? 0)].map(escapeCsv).join(","))].join("\n");
 
   return (
     <div className="tool-grid">
@@ -1231,7 +1365,7 @@ function ParticipationTracker({ state, setState }: { state: unknown; setState: (
     setState({
       ...value,
       counts: { ...value.counts, [student.id]: (value.counts[student.id] ?? 0) + 1 },
-      history: [`${new Date().toLocaleTimeString()},${student.seatNo},${student.name},${value.eventType}`, ...value.history]
+      history: [[new Date().toLocaleTimeString(), student.seatNo, student.name, value.eventType].map(escapeCsv).join(","), ...value.history]
     });
   }
 
@@ -1680,6 +1814,70 @@ function GenericTool({ definition, state, setState }: { definition: ToolDefiniti
         </div>
       </Panel>
     </div>
+  );
+}
+
+function NotebooksPage() {
+  const [query, setQuery] = useState("");
+  const [category, setCategory] = useState<"全部" | (typeof notebookCategories)[number]>("全部");
+  const filtered = notebooks.filter((notebook) => {
+    const matchesCategory = category === "全部" || notebook.category === category;
+    const matchesQuery =
+      !query ||
+      [notebook.title, notebook.description, notebook.category, ...notebook.bestFor, ...notebook.audience]
+        .join(" ")
+        .toLowerCase()
+        .includes(query.toLowerCase());
+    return matchesCategory && matchesQuery;
+  });
+
+  return (
+    <section className="page-section">
+      <div className="section-heading">
+        <div>
+          <p className="eyebrow">NotebookLM public notebooks</p>
+          <h2>NotebookLM 筆記本</h2>
+          <p>整併 personal website 的 22 本公開筆記本，作為 AI 資源區，不混入無 AI 課堂工具。</p>
+        </div>
+      </div>
+      <div className="toolbar slim">
+        <label className="search-box">
+          <Search size={18} />
+          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="搜尋筆記本、分類、用途或對象..." />
+        </label>
+        <div className="quick-buttons">
+          {["全部", ...notebookCategories].map((item) => (
+            <button key={item} className={category === item ? "active" : ""} onClick={() => setCategory(item as typeof category)}>
+              {item}
+            </button>
+          ))}
+        </div>
+      </div>
+      <div className="resource-grid">
+        {filtered.map((notebook) => (
+          <article key={notebook.id} className="resource-card">
+            <div className="resource-icon">{notebook.icon}</div>
+            <h3>{notebook.title}</h3>
+            <p>{notebook.description}</p>
+            <div className="meta-row">
+              <span>{notebook.category}</span>
+              {notebook.audience.slice(0, 2).map((item) => (
+                <span key={item}>{item}</span>
+              ))}
+            </div>
+            <div className="feature-list">
+              {notebook.bestFor.slice(0, 3).map((item) => (
+                <span key={item}>{item}</span>
+              ))}
+            </div>
+            <a className="primary-button" href={notebook.url} target="_blank" rel="noreferrer">
+              前往 NotebookLM
+              <ExternalLink size={16} />
+            </a>
+          </article>
+        ))}
+      </div>
+    </section>
   );
 }
 

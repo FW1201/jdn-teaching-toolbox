@@ -32,7 +32,7 @@ Only delete the old GitHub repository and Vercel project after all of these are 
 - New production URL: `https://jdn-teaching-toolbox.vercel.app`
 - New GitHub repo: `https://github.com/FW1201/jdn-teaching-toolbox`
 - Old Vercel project `gems-portal`: removed successfully on 2026-05-31.
-- Old GitHub repo `FW1201/gems-portal`: deletion attempted after the new production gate passed, but the command was blocked by API/network access in the current Codex sandbox. The command below remains the required final cleanup step.
+- Old GitHub repo `FW1201/gems-portal`: removed successfully on 2026-06-01.
 
 ## Decommission Commands
 

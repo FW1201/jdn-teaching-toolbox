@@ -8,22 +8,32 @@ export function parseRoster(input: string): Student[] {
     .map((line, index) => {
       const parts = line.split(/,|\t/).map((part) => part.trim());
       if (parts.length === 1) {
+        const seatNo = String(index + 1);
+        const name = parts[0];
         return {
-          id: crypto.randomUUID(),
-          seatNo: String(index + 1),
-          name: parts[0],
+          id: stableStudentId(seatNo, name),
+          seatNo,
+          name,
           gender: "",
           note: ""
         };
       }
+      const seatNo = parts[0] || String(index + 1);
+      const name = parts[1] || parts[0] || `學生 ${index + 1}`;
       return {
-        id: crypto.randomUUID(),
-        seatNo: parts[0] || String(index + 1),
-        name: parts[1] || parts[0] || `學生 ${index + 1}`,
+        id: stableStudentId(seatNo, name),
+        seatNo,
+        name,
         gender: parts[2] ?? "",
         note: parts.slice(3).join(" / ")
       };
     });
+}
+
+export function stableStudentId(seatNo: string, name: string) {
+  const normalizedSeatNo = seatNo.trim() || "no-seat";
+  const normalizedName = name.trim() || "unnamed";
+  return `student:${encodeURIComponent(normalizedSeatNo)}:${encodeURIComponent(normalizedName)}`;
 }
 
 export function rosterToCsv(roster: Student[]) {

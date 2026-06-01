@@ -96,6 +96,7 @@ button:disabled,
 
 .brand-block span,
 .eyebrow,
+.topbar-subtitle,
 .tool-card p,
 .section-heading p,
 .result-heading p,
@@ -205,6 +206,11 @@ h3 {
   grid-template-columns: 1fr;
 }
 
+.topbar-subtitle {
+  max-width: 760px;
+  margin: 6px 0 0;
+}
+
 .search-box,
 .select-pill,
 .field {
@@ -276,19 +282,19 @@ h3 {
   padding: 5px 26px 5px 8px;
 }
 
-.content-grid {
-  display: grid;
-  grid-template-columns: 184px minmax(0, 1fr);
-  gap: 18px;
+.category-chips,
+.showcase-stats,
+.workflow-shortcuts {
+  margin-bottom: 18px;
 }
 
-.category-rail {
-  display: grid;
-  align-content: start;
+.category-chips {
+  display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 
-.category-rail button,
+.category-chips button,
 .quick-buttons button {
   min-height: 42px;
   border: 1px solid var(--line);
@@ -297,7 +303,7 @@ h3 {
   color: var(--text);
 }
 
-.category-rail button {
+.category-chips button {
   display: flex;
   align-items: center;
   gap: 9px;
@@ -305,11 +311,59 @@ h3 {
   text-align: left;
 }
 
-.category-rail button.active,
+.category-chips button.active,
 .quick-buttons button.active {
   border-color: var(--primary);
   background: rgba(0, 212, 255, 0.12);
   color: #f8fdff;
+}
+
+.showcase-stats {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.showcase-stats div {
+  min-height: 82px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(17, 24, 39, 0.72);
+}
+
+.showcase-stats strong,
+.showcase-stats span,
+.workflow-shortcuts strong,
+.workflow-shortcuts span {
+  display: block;
+}
+
+.showcase-stats strong {
+  color: var(--primary);
+  font-size: clamp(1.65rem, 4vw, 2.4rem);
+}
+
+.showcase-stats span,
+.workflow-shortcuts span {
+  color: var(--muted);
+}
+
+.workflow-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.workflow-shortcuts article {
+  display: grid;
+  gap: 12px;
+  align-content: space-between;
+  min-height: 132px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(13, 17, 23, 0.66);
 }
 
 .tool-card-grid,
@@ -483,6 +537,51 @@ h3 {
   flex-wrap: wrap;
   gap: 7px;
   margin-top: 14px;
+}
+
+.template-manager {
+  display: grid;
+  gap: 8px;
+  margin-top: 16px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.template-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+}
+
+.template-row button:first-child {
+  min-height: 36px;
+  padding: 7px 9px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: rgba(13, 17, 23, 0.55);
+  color: var(--text);
+  text-align: left;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.roster-gate {
+  display: grid;
+  place-items: center;
+  gap: 18px;
+  min-height: min(680px, calc(100vh - 180px));
+  padding: 32px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius);
+  background: rgba(17, 24, 39, 0.82);
+  text-align: center;
+}
+
+.roster-gate p {
+  max-width: 620px;
+  color: var(--muted);
 }
 
 .detail-list strong {
@@ -1255,12 +1354,21 @@ h3 {
   margin-bottom: 8px;
 }
 
-.projection-mode .panel:first-child {
-  display: none;
+.projection-mode .panel {
+  min-height: auto;
+  margin-bottom: 12px;
 }
 
-.projection-mode .panel {
-  min-height: calc(100vh - 88px);
+.projection-mode .projection-card,
+.projection-mode .timer-display,
+.projection-mode .poll-card,
+.projection-mode .qr-card,
+.projection-mode .worksheet-preview,
+.projection-mode .seating-board,
+.projection-mode .whiteboard-wrap,
+.projection-mode .concept-svg,
+.projection-mode .coordinate-board {
+  min-height: calc(100vh - 136px);
 }
 
 .reduce-motion *,
@@ -1283,7 +1391,7 @@ h3 {
   }
 
   .side-nav {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(5, minmax(0, 1fr));
   }
 
   .tool-layout,
@@ -1311,12 +1419,11 @@ h3 {
     display: grid;
   }
 
-  .toolbar,
-  .content-grid {
+  .toolbar {
     grid-template-columns: 1fr;
   }
 
-  .category-rail,
+  .category-chips,
   .filter-strip,
   .top-actions,
   .workspace-actions {
@@ -1340,7 +1447,9 @@ h3 {
   .traffic-display,
   .dice-result,
   .stat-cards,
-  .two-col {
+  .two-col,
+  .showcase-stats,
+  .workflow-shortcuts {
     grid-template-columns: 1fr;
   }
 
