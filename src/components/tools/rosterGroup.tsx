@@ -227,7 +227,7 @@ export function GroupMaker({ state, setState }: ToolProps) {
         <InputField label="組數" type="number" min={1} value={value.groupCount} onChange={(groupCount) => setState({ ...value, groupCount: Number(groupCount), groups: [] })} />
         <label className="toggle-row"><input type="checkbox" checked={value.balanceGender} onChange={(event) => setState({ ...value, balanceGender: event.target.checked, groups: [] })} />嘗試性別平衡</label>
         <button className="primary-button" onClick={generate}><Shuffle size={16} />產生分組</button>
-        <button className="secondary-button" onClick={() => downloadText("groups.csv", groupsToCsv(groups), "text/csv;charset=utf-8")}><Download size={16} />匯出 CSV</button>
+        <button className="secondary-button" onClick={() => { downloadText("groups.csv", groupsToCsv(groups), "text/csv;charset=utf-8"); notify("已匯出分組 CSV", "success"); }}><Download size={16} />匯出 CSV</button>
       </Panel>
       <Panel title="分組表">
         <div className="group-grid">
