@@ -265,7 +265,7 @@ export function RoleAssigner({ state, setState }: ToolProps) {
         <InputField label="組數" type="number" min={1} value={value.groupCount} onChange={(groupCount) => setState({ ...value, groupCount: Number(groupCount) })} />
         <button className="primary-button" onClick={assign}><Shuffle size={16} />分配角色</button>
       </Panel>
-      <Panel title="角色表" action={<button className="ghost-button" onClick={() => downloadText("roles.csv", csv, "text/csv;charset=utf-8")}><Download size={16} />CSV</button>}>
+      <Panel title="角色表" action={<button className="ghost-button" onClick={() => { downloadText("roles.csv", csv, "text/csv;charset=utf-8"); notify("已匯出角色表 CSV", "success"); }}><Download size={16} />CSV</button>}>
         <div className="table-like compact">
           <div className="table-head"><span>組別</span><span>學生</span><span>角色</span></div>
           {value.assignments.map((item, index) => <div className="table-row" key={`${item.student}-${index}`}><span>{item.group}</span><span>{item.student}</span><strong>{item.role}</strong></div>)}
