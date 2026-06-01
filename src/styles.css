@@ -1706,3 +1706,11 @@ h3 {
   0%, 100% { opacity: 1; }
   50% { opacity: 0.45; }
 }
+
+/* 轉盤真實旋轉：rotation 改變時平滑轉動 4 秒減速 */
+.wheel {
+  transition: transform 4s cubic-bezier(0.16, 0.84, 0.3, 1);
+}
+.reduce-motion .wheel {
+  transition: none;
+}
