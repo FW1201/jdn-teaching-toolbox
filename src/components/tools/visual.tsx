@@ -1,7 +1,8 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import type { DragEvent, PointerEvent } from "react";
-import { Download, Eraser, Plus } from "lucide-react";
+import { Download, Eraser, Plus, Redo2, Trash2, Undo2 } from "lucide-react";
 import { textLines } from "../../lib/toolLogic";
+import { useToast } from "../../hooks/useToast";
 import { InputField, Panel, TextAreaField, exportElementAsPng, mergeState, pointOnCircle } from "../shared";
 import type { ToolProps } from "../shared";
 
