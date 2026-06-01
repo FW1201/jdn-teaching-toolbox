@@ -1,6 +1,5 @@
-import { useState } from "react";
 import type { DragEvent } from "react";
-import { Check, Shuffle } from "lucide-react";
+import { Shuffle } from "lucide-react";
 import { createWordSearch, createBingoCards, shuffle, textLines } from "../../lib/toolLogic";
 import { useToast } from "../../hooks/useToast";
 import { InputField, Panel, TextAreaField, mergeState } from "../shared";
