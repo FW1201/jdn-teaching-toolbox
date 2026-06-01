@@ -147,6 +147,7 @@ export function QrBoard({ state, setState }: ToolProps) {
 
 export function Scoreboard({ state, setState }: ToolProps) {
   const { downloadText } = useExport();
+  const { notify } = useToast();
   const value = mergeState(state, { teamsText: "第一組\n第二組\n第三組\n第四組", scores: {} as Record<string, number>, history: [] as string[] });
   const teams = textLines(value.teamsText);
 
