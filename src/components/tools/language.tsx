@@ -149,7 +149,17 @@ export function BingoTool({ state, setState }: ToolProps) {
         <button className="primary-button" onClick={() => setState({ ...value, cards: createBingoCards(textLines(value.words), value.size, value.count) })}>產生賓果卡</button>
       </Panel>
       <Panel title="列印預覽">
-        <div className="bingo-list">{cards.map((card, cardIndex) => <div key={cardIndex} className="bingo-card" style={{ gridTemplateColumns: `repeat(${value.size}, 1fr)` }}>{card.flatMap((row) => row.map((cell, cellIndex) => <span key={`${cardIndex}-${cell}-${cellIndex}`}>{cell}</span>))}</div>)}</div>
+        <div className="bingo-list">{cards.map((card, cardIndex) => {
+          const center = value.size % 2 === 1 ? Math.floor(value.size / 2) : -1;
+          return (
+            <div key={cardIndex} className="bingo-card" style={{ gridTemplateColumns: `repeat(${value.size}, 1fr)` }}>
+              {card.flatMap((row, rowIndex) => row.map((cell, colIndex) => {
+                const isFree = rowIndex === center && colIndex === center;
+                return <span key={`${cardIndex}-${rowIndex}-${colIndex}`} className={isFree ? "bingo-free" : undefined}>{isFree ? "FREE" : cell}</span>;
+              }))}
+            </div>
+          );
+        })}</div>
       </Panel>
     </div>
   );
