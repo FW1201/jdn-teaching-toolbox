@@ -95,6 +95,7 @@ export function SentenceScramble({ state, setState }: ToolProps) {
           ))}
         </div>
         <div className="sentence-output">{pieces.join(" ")}</div>
+        <div className={`notice-row ${isCorrect ? "success" : ""}`}>{isCorrect ? "✓ 順序正確！" : "拖曳片段排出正確語序"}</div>
       </Panel>
     </div>
   );
