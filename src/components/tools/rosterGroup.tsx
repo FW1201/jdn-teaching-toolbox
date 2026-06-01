@@ -59,6 +59,7 @@ export function RosterCenter() {
 export function SeatingChart({ state, setState }: ToolProps) {
   const { roster } = useRoster();
   const { downloadText } = useExport();
+  const { notify } = useToast();
   const value = mergeState(state, { rows: 5, cols: 6, teacherSide: "上方講台", cells: [] as SeatingCell[] });
   const cells = value.cells.length ? value.cells : createSeatingCells(value.rows, value.cols, roster, "seatNo");
 
