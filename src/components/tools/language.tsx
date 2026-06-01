@@ -42,7 +42,10 @@ export function Flashcards({ state, setState }: ToolProps) {
 export function ClozeTool({ state, setState }: ToolProps) {
   const value = mergeState(state, { text: "數位敘事力是一種把資訊、媒體與故事結構整合的表達能力。", answers: "數位敘事力\n資訊\n故事結構", showAnswers: false });
   const answers = textLines(value.answers);
-  const cloze = answers.reduce((content, answer, index) => content.replaceAll(answer, value.showAnswers ? `【${answer}】` : `____(${index + 1})____`), value.text);
+  const cloze = answers.reduce((content, answer, index) => {
+    const blank = `（${index + 1}）${"＿".repeat(Math.max(2, [...answer].length))}`;
+    return content.replaceAll(answer, value.showAnswers ? `【${answer}】` : blank);
+  }, value.text);
 
   return (
     <div className="tool-grid">
