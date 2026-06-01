@@ -3,12 +3,12 @@ import type { ToolDefinition } from "../data/tools.registry";
 import { useRoster } from "../providers/RosterProvider";
 import { useSettings } from "../providers/SettingsProvider";
 import { ExportButton, GenericTool, RosterGate, TemplateManager } from "./shared";
-import { Countdown, FlowBoard, StopwatchTool, TrafficLight, WorkSymbols } from "./tools/flowOrder";
-import { GroupMaker, RandomPicker, RoleAssigner, RosterCenter, SeatConstraints, SeatingChart, WheelTool } from "./tools/rosterGroup";
-import { ExitTicket, ParticipationTracker, QrBoard, QuickPoll, Scoreboard, TaskChecklist, UnderstandingMeter } from "./tools/assessment";
-import { BingoTool, ClozeTool, Flashcards, SentenceScramble, StoryDice, WordSearchTool } from "./tools/language";
-import { CardSort, ConceptMap, TimelineTool, WhiteboardTool } from "./tools/visual";
-import { FractionTiles, NumberCoordinate, UnitFormula } from "./tools/mathScience";
+import { Countdown, FlowBoard, StopwatchTool, TrafficLight, WorkSymbols } from "./tools/flowOrder/index";
+import { GroupMaker, RandomPicker, RoleAssigner, RosterCenter, SeatConstraints, SeatingChart, WheelTool } from "./tools/rosterGroup/index";
+import { ExitTicket, ParticipationTracker, QrBoard, QuickPoll, Scoreboard, TaskChecklist, UnderstandingMeter } from "./tools/assessment/index";
+import { BingoTool, ClozeTool, Flashcards, SentenceScramble, StoryDice, WordSearchTool } from "./tools/language/index";
+import { CardSort, ConceptMap, TimelineTool, WhiteboardTool } from "./tools/visual/index";
+import { FractionTiles, NumberCoordinate, UnitFormula } from "./tools/mathScience/index";
 
 export function ToolWorkspace({
   definition,
