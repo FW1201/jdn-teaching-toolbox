@@ -213,6 +213,7 @@ export function WheelTool({ state, setState }: ToolProps) {
 export function GroupMaker({ state, setState }: ToolProps) {
   const { roster } = useRoster();
   const { downloadText } = useExport();
+  const { notify } = useToast();
   const value = mergeState(state, { groupCount: 4, balanceGender: true, groups: [] as GroupResult[] });
   const groups = value.groups.length ? value.groups : buildGroups(roster, value.groupCount, value.balanceGender);
 
