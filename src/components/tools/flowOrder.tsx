@@ -212,7 +212,7 @@ export function StopwatchTool({ state, setState }: ToolProps) {
       </Panel>
       <Panel
         title="分段紀錄"
-        action={<button className="ghost-button" onClick={() => downloadText("stopwatch-laps.txt", output)}><Download size={16} />匯出</button>}
+        action={<button className="ghost-button" onClick={() => { downloadText("stopwatch-laps.txt", output); notify("已匯出分段紀錄", "success"); }}><Download size={16} />匯出</button>}
       >
         <div className="result-list">
           {value.laps.map((lap, index) => (
