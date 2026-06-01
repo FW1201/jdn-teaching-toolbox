@@ -38,7 +38,7 @@ export function FlowBoard({ state, setState }: ToolProps) {
       <Panel
         title="設定流程"
         action={
-          <button className="ghost-button" onClick={() => downloadJson("flow-board-template.json", value)}>
+          <button className="ghost-button" onClick={() => { downloadJson("flow-board-template.json", value); notify("已儲存流程模板", "success"); }}>
             <Save size={16} />
             儲存模板
           </button>
