@@ -1790,3 +1790,19 @@ h3 {
 .sticky-note:hover .sticky-delete {
   opacity: 1;
 }
+
+/* 座標平面：格線淡、軸線強 */
+.coordinate-board .grid line {
+  stroke: rgba(230, 237, 243, 0.1);
+  stroke-width: 1;
+}
+.coordinate-board .axis-line {
+  stroke: rgba(0, 212, 255, 0.55);
+  stroke-width: 2;
+}
+
+/* 分數模型平滑過場 */
+.fraction-bar span,
+.fraction-pie {
+  transition: background 0.25s var(--ease);
+}
