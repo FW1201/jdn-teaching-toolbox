@@ -76,7 +76,7 @@ export function FlowBoard({ state, setState }: ToolProps) {
             ))}
           </div>
         </div>
-        <button className="secondary-button" onClick={() => exportElementAsPng("flow-board-export", "flow-board.png")}>
+        <button className="secondary-button" onClick={() => { void exportElementAsPng("flow-board-export", "flow-board.png"); notify("已匯出流程 PNG", "success"); }}>
           <Download size={16} />
           匯出 PNG
         </button>
