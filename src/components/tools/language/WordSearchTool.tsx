@@ -1,10 +1,11 @@
-import { createWordSearch, textLines } from "../../../lib/toolLogic";
+import { createBingoCards, createWordSearch, textLines } from "../../../lib/toolLogic";
 import { InputField, Panel, TextAreaField, mergeState } from "../../shared";
 import type { ToolProps } from "../../shared";
 
 export function WordSearchTool({ state, setState }: ToolProps) {
-  const value = mergeState(state, { words: "STORY\nMEDIA\nCLASS\nLEARN", size: 10, puzzle: null as null | ReturnType<typeof createWordSearch>, showAnswers: false });
+  const value = mergeState(state, { mode: "search" as "search" | "bingo", words: "STORY\nMEDIA\nCLASS\nLEARN", size: 10, bingoSize: 3, bingoCount: 2, puzzle: null as null | ReturnType<typeof createWordSearch>, cards: [] as string[][][], showAnswers: false });
   const puzzle = value.puzzle ?? createWordSearch(textLines(value.words), value.size);
+  const cards = value.cards.length ? value.cards : createBingoCards(textLines(value.words), value.bingoSize, value.bingoCount);
 
   const highlighted = new Set<string>();
   if (value.showAnswers) {
@@ -21,14 +22,36 @@ export function WordSearchTool({ state, setState }: ToolProps) {
   return (
     <div className="tool-grid">
       <Panel title="字詞表">
+        <div className="quick-buttons">
+          <button className={value.mode === "search" ? "active" : ""} onClick={() => setState({ ...value, mode: "search" })}>字詞搜尋</button>
+          <button className={value.mode === "bingo" ? "active" : ""} onClick={() => setState({ ...value, mode: "bingo" })}>賓果卡</button>
+        </div>
         <TextAreaField label="每行一個字詞" value={value.words} onChange={(words) => setState({ ...value, words, puzzle: null })} />
-        <InputField label="方格大小" type="number" min={6} value={value.size} onChange={(size) => setState({ ...value, size: Number(size), puzzle: null })} />
-        <button className="primary-button" onClick={() => setState({ ...value, puzzle: createWordSearch(textLines(value.words), value.size) })}>產生方格</button>
+        {value.mode === "search" ? (
+          <>
+            <InputField label="方格大小" type="number" min={6} value={value.size} onChange={(size) => setState({ ...value, size: Number(size), puzzle: null })} />
+            <button className="primary-button" onClick={() => setState({ ...value, puzzle: createWordSearch(textLines(value.words), value.size) })}>產生方格</button>
+          </>
+        ) : (
+          <>
+            <div className="two-col">
+              <InputField label="賓果尺寸" type="number" min={3} value={value.bingoSize} onChange={(size) => setState({ ...value, bingoSize: Number(size), cards: [] })} />
+              <InputField label="份數" type="number" min={1} value={value.bingoCount} onChange={(count) => setState({ ...value, bingoCount: Number(count), cards: [] })} />
+            </div>
+            <button className="primary-button" onClick={() => setState({ ...value, cards: createBingoCards(textLines(value.words), value.bingoSize, value.bingoCount) })}>產生賓果卡</button>
+          </>
+        )}
       </Panel>
-      <Panel title="字詞搜尋">
-        <div className="word-grid" style={{ gridTemplateColumns: `repeat(${value.size}, 1fr)` }}>{puzzle.grid.flatMap((row, rowIndex) => row.map((cell, colIndex) => <span key={`${rowIndex}-${colIndex}`} className={highlighted.has(`${rowIndex}-${colIndex}`) ? "found" : undefined}>{cell}</span>))}</div>
-        <label className="toggle-row"><input type="checkbox" checked={value.showAnswers} onChange={(event) => setState({ ...value, puzzle, showAnswers: event.target.checked })} />顯示解答（方格高亮）</label>
-        {value.showAnswers && <div className="answer-list">{puzzle.placements.map((item) => <span key={item.word}>{item.word}（{item.dir === "H" ? "橫" : "直"}）</span>)}</div>}
+      <Panel title={value.mode === "search" ? "字詞搜尋" : "賓果卡"}>
+        {value.mode === "search" ? (
+          <>
+            <div className="word-grid" style={{ gridTemplateColumns: `repeat(${value.size}, 1fr)` }}>{puzzle.grid.flatMap((row, rowIndex) => row.map((cell, colIndex) => <span key={`${rowIndex}-${colIndex}`} className={highlighted.has(`${rowIndex}-${colIndex}`) ? "found" : undefined}>{cell}</span>))}</div>
+            <label className="toggle-row"><input type="checkbox" checked={value.showAnswers} onChange={(event) => setState({ ...value, puzzle, showAnswers: event.target.checked })} />顯示解答（方格高亮）</label>
+            {value.showAnswers && <div className="answer-list">{puzzle.placements.map((item) => <span key={item.word}>{item.word}（{item.dir === "H" ? "橫" : "直"}）</span>)}</div>}
+          </>
+        ) : (
+          <div className="bingo-list">{cards.map((card, cardIndex) => <div key={cardIndex} className="bingo-card" style={{ gridTemplateColumns: `repeat(${value.bingoSize}, 1fr)` }}>{card.flatMap((row) => row.map((cell, cellIndex) => <span key={`${cardIndex}-${cell}-${cellIndex}`}>{cell}</span>))}</div>)}</div>
+        )}
       </Panel>
     </div>
   );

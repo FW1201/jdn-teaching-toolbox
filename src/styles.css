@@ -651,6 +651,17 @@ h3 {
   padding: 0 13px;
 }
 
+.compact-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.compact-row > * {
+  min-width: 0;
+}
+
 .projection-card,
 .timer-display,
 .poll-card,
@@ -732,6 +743,17 @@ h3 {
   background: #0c121d;
   font-size: clamp(2rem, 7vw, 4.7rem);
   font-weight: 900;
+}
+
+.timer-block {
+  display: grid;
+  gap: 12px;
+  width: min(760px, 100%);
+  justify-items: center;
+}
+
+.timer-block strong {
+  font-size: clamp(2rem, 7vw, 4.7rem);
 }
 
 .traffic-display,
@@ -926,6 +948,30 @@ h3 {
   font-size: 2rem;
 }
 
+.rubric-grid {
+  display: grid;
+  gap: 8px;
+  width: 100%;
+  overflow: auto;
+}
+
+.rubric-grid > * {
+  min-width: 0;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #0f1622;
+}
+
+.rubric-grid select {
+  width: 100%;
+  min-height: 38px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #0c121d;
+  color: var(--text);
+}
+
 .qr-card img {
   width: min(70vw, 360px);
   border-radius: var(--radius);
@@ -1056,6 +1102,25 @@ h3 {
   place-items: center;
   border: 1px solid var(--line);
   text-align: center;
+}
+
+.text-annotator-preview {
+  display: grid;
+  gap: 10px;
+  width: 100%;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #0f1622;
+  text-align: left;
+  line-height: 1.8;
+}
+
+.text-annotator-preview p {
+  margin: 0;
+  padding: 10px 12px;
+  border-left: 5px solid transparent;
+  border-radius: var(--radius);
 }
 
 .dice-result {
@@ -2273,4 +2338,3 @@ h3 {
   border-color: var(--line-strong);
   background: rgba(0, 212, 255, 0.07);
 }
-

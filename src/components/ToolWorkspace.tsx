@@ -3,12 +3,48 @@ import type { ToolDefinition } from "../data/tools.registry";
 import { useRoster } from "../providers/RosterProvider";
 import { useSettings } from "../providers/SettingsProvider";
 import { ExportButton, GenericTool, RosterGate, TemplateManager } from "./shared";
-import { Countdown, FlowBoard, StopwatchTool, TrafficLight, WorkSymbols } from "./tools/flowOrder/index";
-import { GroupMaker, RandomPicker, RoleAssigner, RosterCenter, SeatConstraints, SeatingChart, WheelTool } from "./tools/rosterGroup/index";
-import { ExitTicket, ParticipationTracker, QrBoard, QuickPoll, Scoreboard, TaskChecklist, UnderstandingMeter } from "./tools/assessment/index";
-import { BingoTool, ClozeTool, Flashcards, SentenceScramble, StoryDice, WordSearchTool } from "./tools/language/index";
+import { Countdown, FlowBoard, StationRotation, StopwatchTool, TrafficLight, WorkSymbols } from "./tools/flowOrder/index";
+import { AttendanceBoard, DiscussionTracker, GroupMaker, RandomPicker, RoleAssigner, RosterCenter, SeatingChart } from "./tools/rosterGroup/index";
+import { ExitTicket, ParticipationTracker, QrBoard, QuickPoll, RubricBoard, Scoreboard, TaskChecklist } from "./tools/assessment/index";
+import { ClozeTool, Flashcards, SentenceScramble, StoryDice, TextAnnotator, WordSearchTool } from "./tools/language/index";
 import { CardSort, ConceptMap, TimelineTool, WhiteboardTool } from "./tools/visual/index";
 import { FractionTiles, NumberCoordinate, UnitFormula } from "./tools/mathScience/index";
+
+export const renderedToolIds = [
+  "flow-board",
+  "countdown",
+  "station-rotation",
+  "stopwatch",
+  "traffic-light",
+  "work-symbols",
+  "roster-center",
+  "seating-chart",
+  "attendance-board",
+  "random-picker",
+  "discussion-tracker",
+  "group-maker",
+  "role-assigner",
+  "quick-poll",
+  "exit-ticket",
+  "rubric-board",
+  "qr-board",
+  "scoreboard",
+  "participation-tracker",
+  "task-checklist",
+  "flashcards",
+  "cloze",
+  "sentence-scramble",
+  "word-search",
+  "text-annotator",
+  "story-dice",
+  "whiteboard",
+  "card-sort",
+  "concept-map",
+  "timeline",
+  "number-coordinate",
+  "fraction-tiles",
+  "unit-formula"
+] as const;
 
 export function ToolWorkspace({
   definition,
@@ -102,8 +138,8 @@ function ToolRenderer({ definition, state, setState, onOpenTool }: { definition:
       return <FlowBoard state={state} setState={setState} />;
     case "countdown":
       return <Countdown state={state} setState={setState} visual={false} />;
-    case "visual-timer":
-      return <Countdown state={state} setState={setState} visual />;
+    case "station-rotation":
+      return <StationRotation state={state} setState={setState} />;
     case "stopwatch":
       return <StopwatchTool state={state} setState={setState} />;
     case "traffic-light":
@@ -114,12 +150,12 @@ function ToolRenderer({ definition, state, setState, onOpenTool }: { definition:
       return <RosterCenter />;
     case "seating-chart":
       return <SeatingChart state={state} setState={setState} />;
-    case "seat-constraints":
-      return <SeatConstraints state={state} setState={setState} />;
+    case "attendance-board":
+      return <AttendanceBoard state={state} setState={setState} />;
     case "random-picker":
       return <RandomPicker state={state} setState={setState} />;
-    case "wheel":
-      return <WheelTool state={state} setState={setState} />;
+    case "discussion-tracker":
+      return <DiscussionTracker state={state} setState={setState} />;
     case "group-maker":
       return <GroupMaker state={state} setState={setState} />;
     case "role-assigner":
@@ -128,8 +164,8 @@ function ToolRenderer({ definition, state, setState, onOpenTool }: { definition:
       return <QuickPoll state={state} setState={setState} />;
     case "exit-ticket":
       return <ExitTicket state={state} setState={setState} />;
-    case "understanding-meter":
-      return <UnderstandingMeter state={state} setState={setState} />;
+    case "rubric-board":
+      return <RubricBoard state={state} setState={setState} />;
     case "qr-board":
       return <QrBoard state={state} setState={setState} />;
     case "scoreboard":
@@ -146,8 +182,8 @@ function ToolRenderer({ definition, state, setState, onOpenTool }: { definition:
       return <SentenceScramble state={state} setState={setState} />;
     case "word-search":
       return <WordSearchTool state={state} setState={setState} />;
-    case "bingo":
-      return <BingoTool state={state} setState={setState} />;
+    case "text-annotator":
+      return <TextAnnotator state={state} setState={setState} />;
     case "story-dice":
       return <StoryDice state={state} setState={setState} />;
     case "whiteboard":

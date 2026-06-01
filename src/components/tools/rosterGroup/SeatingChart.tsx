@@ -1,5 +1,5 @@
 import { Download, Printer, Shuffle } from "lucide-react";
-import { createSeatingCells, escapeCsv } from "../../../lib/toolLogic";
+import { createSeatingCells, escapeCsv, textLines } from "../../../lib/toolLogic";
 import type { SeatingCell } from "../../../lib/types";
 import { useExport } from "../../../providers/ExportProvider";
 import { useRoster } from "../../../providers/RosterProvider";
@@ -11,7 +11,7 @@ export function SeatingChart({ state, setState }: ToolProps) {
   const { roster } = useRoster();
   const { downloadText } = useExport();
   const { notify } = useToast();
-  const value = mergeState(state, { rows: 5, cols: 6, teacherSide: "上方講台", cells: [] as SeatingCell[] });
+  const value = mergeState(state, { rows: 5, cols: 6, teacherSide: "上方講台", apart: "", front: "", back: "", cells: [] as SeatingCell[] });
   const cells = value.cells.length ? value.cells : createSeatingCells(value.rows, value.cols, roster, "seatNo");
 
   function update(next: typeof value) {
@@ -23,6 +23,18 @@ export function SeatingChart({ state, setState }: ToolProps) {
   }
 
   const studentMap = new Map(roster.map((student) => [student.id, student]));
+  const seatedStudents = cells.flatMap((cell) => {
+    const student = cell.studentId ? studentMap.get(cell.studentId) : undefined;
+    return student ? [{ cell, student }] : [];
+  });
+  const apartPairs = textLines(value.apart).map((line) => line.split(/,|，|、|\s+/).map((part) => part.trim()).filter(Boolean)).filter((pair) => pair.length >= 2);
+  const conflicts = apartPairs.flatMap(([a, b]) => {
+    const first = seatedStudents.find((item) => item.student.name.includes(a) || item.student.seatNo === a);
+    const second = seatedStudents.find((item) => item.student.name.includes(b) || item.student.seatNo === b);
+    if (!first || !second) return [];
+    const adjacent = Math.abs(first.cell.row - second.cell.row) + Math.abs(first.cell.col - second.cell.col) === 1;
+    return adjacent ? [`${first.student.name} 與 ${second.student.name} 相鄰，違反需分開限制`] : [];
+  });
   const csv = cells.map((cell) => {
     const student = cell.studentId ? studentMap.get(cell.studentId) : undefined;
     return [String(cell.row + 1), String(cell.col + 1), student?.seatNo ?? "", student?.name ?? ""].map(escapeCsv).join(",");
@@ -36,9 +48,20 @@ export function SeatingChart({ state, setState }: ToolProps) {
           <InputField label="欄" type="number" min={1} value={value.cols} onChange={(cols) => update({ ...value, cols: Number(cols), cells: [] })} />
         </div>
         <InputField label="講台標示" value={value.teacherSide} onChange={(teacherSide) => update({ ...value, teacherSide })} />
+        <label className="field">
+          <span>需分開（每行一組，可用逗號）</span>
+          <textarea rows={3} value={value.apart} onChange={(event) => update({ ...value, apart: event.target.value })} placeholder="王小明,陳小華" />
+        </label>
+        <div className="two-col">
+          <InputField label="前排偏好" value={value.front} onChange={(front) => update({ ...value, front })} />
+          <InputField label="後排偏好" value={value.back} onChange={(back) => update({ ...value, back })} />
+        </div>
         <div className="action-row">
           <button className="primary-button" onClick={() => arrange("random")}><Shuffle size={16} />隨機排</button>
           <button className="secondary-button" onClick={() => arrange("seatNo")}>座號排</button>
+        </div>
+        <div className="result-list">
+          {conflicts.length ? conflicts.map((conflict) => <div className="notice-row warning" key={conflict}>{conflict}</div>) : <div className="notice-row success">目前沒有相鄰衝突。</div>}
         </div>
       </Panel>
       <Panel

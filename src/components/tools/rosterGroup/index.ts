@@ -1,7 +1,9 @@
 export { RosterCenter } from "./RosterCenter";
 export { SeatingChart } from "./SeatingChart";
+export { AttendanceBoard } from "./AttendanceBoard";
 export { SeatConstraints } from "./SeatConstraints";
 export { RandomPicker } from "./RandomPicker";
+export { DiscussionTracker } from "./DiscussionTracker";
 export { WheelTool } from "./WheelTool";
 export { GroupMaker } from "./GroupMaker";
 export { RoleAssigner } from "./RoleAssigner";

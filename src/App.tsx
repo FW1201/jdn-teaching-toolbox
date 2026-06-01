@@ -90,7 +90,7 @@ export function App({ initialToolState, onToolStateChange, onResetAll, onRestore
           <div className="topbar-brand">
             <div className="topbar-tag">數位敘事力期刊 · Journal Digital Narrative 開發</div>
             <h1>數位敘事力教學工具箱</h1>
-            <p className="topbar-subtitle">整合 31 個自建課堂工具、NotebookLM 筆記本、Gems 資源與 Chrome 擴充功能，全部在本站內操作。</p>
+            <p className="topbar-subtitle">整合 {toolsRegistry.length} 個自建課堂工具、NotebookLM 筆記本、Gems 資源與 Chrome 擴充功能，全部在本站內操作。</p>
           </div>
           <div className="top-actions">
             <button className="icon-text" onClick={() => updateSettings({ projectionMode: !settings.projectionMode })}>
