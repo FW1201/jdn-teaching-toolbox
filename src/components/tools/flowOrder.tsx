@@ -8,6 +8,7 @@ import type { ToolProps } from "../shared";
 
 export function FlowBoard({ state, setState }: ToolProps) {
   const { downloadJson } = useExport();
+  const { notify } = useToast();
   const value = mergeState(state, {
     title: "今日國語課",
     items: [
