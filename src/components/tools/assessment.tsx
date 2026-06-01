@@ -186,6 +186,7 @@ export function Scoreboard({ state, setState }: ToolProps) {
 export function ParticipationTracker({ state, setState }: ToolProps) {
   const { roster } = useRoster();
   const { downloadText } = useExport();
+  const { notify } = useToast();
   const value = mergeState(state, { eventType: "發言", counts: {} as Record<string, number>, history: [] as string[] });
 
   function record(student: Student) {
