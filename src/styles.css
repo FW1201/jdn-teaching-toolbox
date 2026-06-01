@@ -2107,3 +2107,170 @@ h3 {
   }
 }
 
+/* ═══════════════════════════════════════════════════════════
+   Figma Design Language 適配 — Pill · 負向字距 · Color-block
+   參考：getdesign figma — "playful yet professional"
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── 1. Pill 形按鈕（Figma 核心 CTA 語彙） ──────────────── */
+.primary-button {
+  border-radius: var(--radius-pill);
+  padding: 10px 22px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.secondary-button {
+  border-radius: var(--radius-pill);
+  padding: 9px 20px;
+  font-weight: 500;
+}
+
+.category-chips button,
+.quick-buttons button {
+  border-radius: var(--radius-pill);
+  padding: 8px 16px;
+}
+
+.topbar-tag {
+  border-radius: var(--radius-pill);
+}
+
+/* ── 2. 標題負向 letter-spacing（Figma 「editorial cadence」） */
+h1 {
+  letter-spacing: -0.03em;
+  font-weight: 800;
+}
+
+h2 {
+  letter-spacing: -0.025em;
+  font-weight: 700;
+}
+
+h3 {
+  letter-spacing: -0.015em;
+}
+
+.eyebrow {
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.72rem;
+}
+
+/* ── 3. Color-block 區塊感（Figma 的 sticky-note 章節節奏） */
+.showcase-stats div {
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg,
+    rgba(0, 212, 255, 0.06) 0%,
+    rgba(13, 17, 23, 0.82) 100%);
+}
+
+.workflow-shortcuts article {
+  border-radius: var(--radius-lg);
+  background: linear-gradient(135deg,
+    rgba(123, 47, 255, 0.07) 0%,
+    rgba(13, 17, 23, 0.72) 100%);
+}
+
+.workflow-shortcuts article:hover {
+  border-color: rgba(123, 47, 255, 0.45);
+  background: linear-gradient(135deg,
+    rgba(123, 47, 255, 0.12) 0%,
+    rgba(13, 17, 23, 0.82) 100%);
+}
+
+/* ── 4. 工具卡 hairline + 精緻 shadow（Figma level-1 elevation） */
+.tool-card,
+.resource-card,
+.extension-card,
+.panel,
+.tool-detail-panel {
+  border-color: rgba(230, 237, 243, 0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(230, 237, 243, 0.06);
+}
+
+.tool-card:hover,
+.resource-card:hover {
+  border-color: rgba(0, 212, 255, 0.4);
+  box-shadow: 0 4px 24px rgba(0, 212, 255, 0.12), 0 0 0 1px rgba(0, 212, 255, 0.25);
+}
+
+/* ── 5. 輸入欄 focus ring（Figma「ring, not fill」） */
+.field input:focus,
+.field textarea:focus,
+.field select:focus,
+.list-row input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.18);
+  outline: none;
+}
+
+.search-box:focus-within {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.15);
+}
+
+/* ── 6. Panel 標題更精緻（Figma card-title 質感） */
+.panel-heading h3 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── 7. 投影卡 / 計時器 color-block 感 ───────────────────── */
+.projection-card,
+.timer-display,
+.poll-card,
+.qr-card {
+  border-radius: var(--radius-lg);
+  background: linear-gradient(160deg, #0e1620 0%, #0c121d 100%);
+}
+
+/* ── 8. 工具圖示色塊（Figma block-lilac 對映次色） ─────── */
+.tool-icon {
+  border-radius: 12px;
+  background: linear-gradient(135deg,
+    rgba(123, 47, 255, 0.15) 0%,
+    rgba(0, 212, 255, 0.10) 100%);
+  color: var(--primary);
+}
+
+/* ── 9. Sidebar footer 字型精修 ───────────────────────────── */
+.sidebar-footer-label {
+  font-weight: 700;
+  letter-spacing: 0.1em;
+}
+
+.sidebar-dev-note {
+  font-size: 0.67rem;
+  letter-spacing: 0.02em;
+}
+
+/* ── 10. Icon-only 按鈕 → 圓形（Figma button-icon-circular） */
+.icon-only,
+.icon-text {
+  border-radius: var(--radius-pill);
+}
+
+/* ── 11. 結果行 + 分段記錄 精修 ─────────────────────────── */
+.result-row,
+.notice-row,
+.list-row {
+  border-radius: var(--radius);
+}
+
+/* ── 12. Workspace 返回按鈕強化 ──────────────────────────── */
+.workspace-header .ghost-button {
+  border-radius: var(--radius-pill);
+  padding: 8px 16px;
+  border: 1px solid var(--line);
+}
+
+.workspace-header .ghost-button:hover {
+  border-color: var(--line-strong);
+  background: rgba(0, 212, 255, 0.07);
+}
+
