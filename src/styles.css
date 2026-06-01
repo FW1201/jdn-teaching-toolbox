@@ -1714,3 +1714,24 @@ h3 {
 .reduce-motion .wheel {
   transition: none;
 }
+
+/* 參與追蹤：可捲動全班清單；零參與者以強調色標示 */
+.result-list.scroll {
+  max-height: 420px;
+  overflow-y: auto;
+}
+.result-row.is-zero {
+  border-color: rgba(255, 107, 53, 0.5);
+}
+.result-row.is-zero strong {
+  color: var(--accent);
+}
+
+/* 任務檢核：每組完成進度小標 */
+.matrix-progress {
+  display: block;
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 600;
+}
