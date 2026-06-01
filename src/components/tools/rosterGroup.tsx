@@ -21,6 +21,7 @@ import type { ToolProps } from "../shared";
 export function RosterCenter() {
   const { roster, setRoster } = useRoster();
   const { downloadText } = useExport();
+  const { notify } = useToast();
   const [input, setInput] = useState("1,王小明,男,需要前排\n2,陳小華,女,\n3,林小安,女,可協助同學");
 
   return (
