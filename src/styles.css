@@ -2661,3 +2661,120 @@ h3 {
     width: 100%;
   }
 }
+
+/* ════════════════════════════════════════════════════════════
+   Binance 重構 Phase 5：Command Palette（⌘K）
+   ════════════════════════════════════════════════════════════ */
+
+.command-palette-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  justify-items: center;
+  align-items: start;
+  padding: 12vh 16px 16px;
+  background: color-mix(in srgb, var(--bg) 62%, transparent);
+  backdrop-filter: blur(6px);
+}
+
+.command-palette {
+  width: min(560px, 100%);
+  max-height: 70vh;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel-2);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.55), 0 0 0 1px color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+.palette-input {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+}
+
+.palette-input input {
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  font-size: 1rem;
+  outline: none;
+}
+
+.command-palette kbd,
+.hotkey-hint {
+  padding: 2px 6px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: var(--bg-elevated);
+  color: var(--muted);
+  font-family: var(--font-number);
+  font-size: 0.7rem;
+}
+
+.palette-list {
+  overflow-y: auto;
+  padding: 8px;
+}
+
+.palette-group-title {
+  margin: 8px 8px 4px;
+  color: var(--text-tertiary);
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.palette-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 44px;
+  padding: 8px 10px;
+  border: none;
+  border-radius: var(--radius-btn);
+  background: transparent;
+  color: var(--text);
+  text-align: left;
+}
+
+.palette-item.selected {
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  box-shadow: inset 3px 0 0 var(--primary);
+}
+
+.palette-item-hint {
+  color: var(--text-tertiary);
+  font-size: 0.74rem;
+}
+
+.palette-footer {
+  display: flex;
+  gap: 16px;
+  padding: 10px 16px;
+  border-top: 1px solid var(--line);
+  color: var(--text-tertiary);
+  font-size: 0.74rem;
+}
+
+.palette-footer span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* 投影模式下隱藏 palette 提示鍵帽（topbar 已隱藏則不影響） */
+.projection-mode .hotkey-hint {
+  display: none;
+}
