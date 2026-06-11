@@ -2405,3 +2405,151 @@ h3 {
 .projection-mode .projection-card {
   box-shadow: none;
 }
+
+/* ════════════════════════════════════════════════════════════
+   Binance 重構 Phase 3：按鈕體系 + 卡片層級 + Sidebar
+   （覆蓋上方 Figma pill 適配層；DESIGN.md button 規格）
+   ════════════════════════════════════════════════════════════ */
+
+/* ── 按鈕去 pill 化：Binance rounded.md = 6px ── */
+.primary-button,
+.secondary-button,
+.ghost-button,
+.icon-text,
+.danger-button,
+.icon-only {
+  border-radius: var(--radius-btn);
+  font-weight: 600;
+  letter-spacing: 0;
+}
+
+.primary-button {
+  padding: 9px 16px;
+  border: 1px solid transparent;
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.primary-button:hover:not(:disabled) {
+  background: var(--primary-hover);
+  box-shadow: none;
+  transform: none;
+}
+
+.secondary-button {
+  padding: 9px 16px;
+  border: 1px solid transparent;
+  background: var(--bg-elevated);
+  color: var(--text);
+  font-weight: 500;
+}
+
+.secondary-button:hover:not(:disabled) {
+  border-color: transparent;
+  background: #363c45;
+  transform: none;
+}
+
+.ghost-button {
+  border: 1px solid var(--line);
+  background: transparent;
+}
+
+.ghost-button:hover:not(:disabled) {
+  border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+  background: color-mix(in srgb, var(--primary) 6%, transparent);
+}
+
+/* 危險動作改 outline 式：降低視覺權重，不與黃色 CTA 競爭 */
+.danger-button {
+  border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent);
+  background: transparent;
+  color: var(--danger);
+  font-weight: 500;
+}
+
+.danger-button:hover:not(:disabled) {
+  border-color: var(--danger);
+  background: color-mix(in srgb, var(--danger) 14%, transparent);
+  color: #ffdce3;
+}
+
+.icon-only {
+  width: 36px;
+  min-height: 36px;
+  padding: 0;
+}
+
+/* 標籤類維持小圓角（Binance rounded.sm）；僅 meta tag 保留 pill */
+.category-chips button,
+.quick-buttons button {
+  border-radius: var(--radius-btn);
+  padding: 8px 14px;
+}
+
+.workspace-header .ghost-button,
+.icon-text {
+  border-radius: var(--radius-btn);
+}
+
+/* focus ring 改 info 藍（DESIGN.md focus-ring）：黃鈕上黃環不可見 */
+:where(button, a, input, textarea, select):focus-visible {
+  outline: 2px solid var(--focus-ring);
+  outline-offset: 2px;
+}
+
+/* ── 卡片資訊層級 ── */
+.tool-card .tool-icon {
+  width: 40px;
+  height: 40px;
+  color: var(--primary);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
+  border-radius: var(--radius);
+}
+
+.tool-card .meta-row span {
+  font-size: 0.7rem;
+  border-radius: 4px;
+  background: var(--bg-elevated);
+  color: var(--muted);
+}
+
+/* 33 顆黃色按鈕同屏的疲勞控制：hover 卡片時才全飽和 */
+.tool-card .primary-button {
+  opacity: 0.92;
+  transition: opacity 0.18s var(--ease), background-color 0.18s var(--ease);
+}
+
+.tool-card:hover .primary-button {
+  opacity: 1;
+}
+
+/* ── Sidebar：Binance 導航慣例（左側 3px 黃色指示條）── */
+.brand-mark {
+  border: none;
+  background: var(--primary);
+  color: var(--on-primary);
+}
+
+.side-nav button.active {
+  border-color: transparent;
+  background: var(--bg-elevated);
+  box-shadow: inset 3px 0 0 var(--primary);
+}
+
+.side-nav button:hover:not(.active) {
+  border-color: transparent;
+  background: color-mix(in srgb, var(--bg-elevated) 60%, transparent);
+}
+
+/* ── 手機版 sidebar footer 收斂 ── */
+@media (max-width: 760px) {
+  .sidebar-dev-note {
+    display: none;
+  }
+
+  .sidebar-footer {
+    margin-top: 8px;
+    padding-top: 8px;
+  }
+}
