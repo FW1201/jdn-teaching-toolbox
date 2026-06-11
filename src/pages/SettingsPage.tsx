@@ -6,6 +6,7 @@ import { useExport } from "../providers/ExportProvider";
 import { useRoster } from "../providers/RosterProvider";
 import { useSettings } from "../providers/SettingsProvider";
 import { InputField, Panel, TextAreaField } from "../components/shared";
+import { ConfirmButton } from "../components/ui/ConfirmButton";
 
 export function SettingsPage({ toolState, onResetAll, onRestoreBackup }: { toolState: Record<string, unknown>; onResetAll: () => void; onRestoreBackup: (backup: ToolboxBackup) => void }) {
   const { roster } = useRoster();
@@ -42,7 +43,7 @@ export function SettingsPage({ toolState, onResetAll, onRestoreBackup }: { toolS
             <div><strong>{Object.keys(toolState).length}</strong><span>工具資料</span></div>
           </div>
           <button className="primary-button" onClick={() => downloadJson("jdn-teaching-toolbox-backup.json", createBackup(roster, settings, toolState))}><FileJson size={16} />匯出備份 JSON</button>
-          <button className="danger-button" onClick={onResetAll}><Trash2 size={16} />清除所有本機資料</button>
+          <ConfirmButton onConfirm={onResetAll}><Trash2 size={16} />清除所有本機資料</ConfirmButton>
         </Panel>
         <Panel title="還原設定">
           <TextAreaField label="貼上備份 JSON" rows={8} value={importText} onChange={setImportText} />

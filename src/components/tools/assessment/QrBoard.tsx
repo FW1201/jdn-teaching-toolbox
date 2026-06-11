@@ -13,7 +13,7 @@ export function QrBoard({ state, setState }: ToolProps) {
 
   useEffect(() => {
     if (!value.url || value.url === "https://" || value.qrFor === value.url) return;
-    QRCode.toDataURL(value.url, { margin: 1, width: 420, color: { dark: "#0d1117", light: "#ffffff" } }).then((qr) => setState({ ...value, qr, qrFor: value.url }));
+    QRCode.toDataURL(value.url, { margin: 1, width: 420, color: { dark: "#0b0e11", light: "#ffffff" } }).then((qr) => setState({ ...value, qr, qrFor: value.url }));
   }, [setState, value]);
 
   function downloadQr() {

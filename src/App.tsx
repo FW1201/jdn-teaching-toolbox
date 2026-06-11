@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-import { EyeOff, FileJson, Monitor, RotateCcw } from "lucide-react";
+import { Command, EyeOff, FileJson, Monitor, RotateCcw } from "lucide-react";
 import { toolsRegistry } from "./data/tools.registry";
 import { createBackup } from "./lib/storage";
 import type { ToolboxBackup } from "./lib/types";
@@ -10,6 +10,10 @@ import { Sidebar } from "./components/layout/Sidebar";
 import type { Section } from "./components/layout/Sidebar";
 import { CategoryChips, ShowcaseStats, ToolCard, ToolsToolbar, WorkflowShortcuts, defaultFilter } from "./components/home/ToolsHome";
 import type { FilterState } from "./components/home/ToolsHome";
+import { QuickAccessShelf } from "./components/home/QuickAccessShelf";
+import { CommandPalette } from "./components/CommandPalette";
+import { useGlobalHotkeys } from "./hooks/useHotkeys";
+import { scoreToolMatch } from "./lib/toolLogic";
 import { ToolWorkspace } from "./components/ToolWorkspace";
 import { ExtensionsPage, GemsPage, NotebooksPage } from "./pages/ResourcePages";
 import { SettingsPage } from "./pages/SettingsPage";
@@ -29,6 +33,22 @@ export function App({ initialToolState, onToolStateChange, onResetAll, onRestore
   const [section, setSection] = useState<Section>("tools");
   const [activeToolId, setActiveToolId] = useState<string | null>(null);
   const [filter, setFilter] = useState<FilterState>(defaultFilter);
+  const [paletteOpen, setPaletteOpen] = useState(false);
+
+  useGlobalHotkeys({
+    onCommandPalette: () => setPaletteOpen((open) => !open),
+    onFocusSearch: () => {
+      if (section === "tools" && !activeToolId) document.getElementById("tool-search-input")?.focus();
+    },
+    onEscape: (inEditable) => {
+      if (paletteOpen) {
+        setPaletteOpen(false);
+      } else if (activeToolId && !inEditable) {
+        setActiveToolId(null);
+      }
+    },
+    onToggleProjection: () => updateSettings({ projectionMode: !settings.projectionMode })
+  });
 
   useEffect(() => {
     document.documentElement.style.setProperty("--font-scale", String(settings.fontScale));
@@ -41,20 +61,20 @@ export function App({ initialToolState, onToolStateChange, onResetAll, onRestore
 
   const filteredTools = useMemo(() => {
     const query = filter.query.trim().toLowerCase();
-    return toolsRegistry.filter((tool) => {
-      const matchesQuery =
-        !query ||
-        [tool.name, tool.summary, tool.detail, tool.category, ...tool.tags, ...tool.subjects, ...tool.grades]
-          .join(" ")
-          .toLowerCase()
-          .includes(query);
+    const matches = toolsRegistry.filter((tool) => {
       const matchesCategory = filter.category === "全部" || tool.category === filter.category;
       const matchesStage = filter.stage === "全部" || tool.stage.includes(filter.stage);
       const matchesRoster = filter.roster === "全部" || (filter.roster === "需名單" ? tool.needsRoster : !tool.needsRoster);
       const matchesExport = filter.exportable === "全部" || (filter.exportable === "可匯出" ? tool.canExport : tool.projectionReady);
       const matchesSubject = filter.subject === "全部" || tool.subjects.includes(filter.subject);
-      return matchesQuery && matchesCategory && matchesStage && matchesRoster && matchesExport && matchesSubject;
+      return matchesCategory && matchesStage && matchesRoster && matchesExport && matchesSubject;
     });
+    if (!query) return matches;
+    return matches
+      .map((tool) => ({ tool, score: scoreToolMatch(tool, query) }))
+      .filter((entry) => entry.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map((entry) => entry.tool);
   }, [filter]);
 
   function updateToolState<T>(toolId: string, value: T) {
@@ -93,6 +113,11 @@ export function App({ initialToolState, onToolStateChange, onResetAll, onRestore
             <p className="topbar-subtitle">整合 {toolsRegistry.length} 個自建課堂工具、NotebookLM 筆記本、Gems 資源與 Chrome 擴充功能，全部在本站內操作。</p>
           </div>
           <div className="top-actions">
+            <button className="icon-text" onClick={() => setPaletteOpen(true)} aria-label="開啟指令面板">
+              <Command size={18} />
+              搜尋
+              <kbd className="hotkey-hint">⌘K</kbd>
+            </button>
             <button className="icon-text" onClick={() => updateSettings({ projectionMode: !settings.projectionMode })}>
               {settings.projectionMode ? <EyeOff size={18} /> : <Monitor size={18} />}
               {settings.projectionMode ? "教師模式" : "投影模式"}
@@ -106,10 +131,9 @@ export function App({ initialToolState, onToolStateChange, onResetAll, onRestore
 
         {section === "tools" && !activeTool && (
           <>
-            <ShowcaseStats />
+            <QuickAccessShelf openTool={openTool} />
             <ToolsToolbar filter={filter} setFilter={setFilter} subjects={subjects} />
             <CategoryChips filter={filter} setFilter={setFilter} />
-            <WorkflowShortcuts openTool={openTool} />
             <section className="tool-results">
               <div className="result-heading">
                 <div>
@@ -134,6 +158,9 @@ export function App({ initialToolState, onToolStateChange, onResetAll, onRestore
                 ))}
               </div>
             </section>
+            {/* 展示性內容降到頁尾：上課動線優先 */}
+            <WorkflowShortcuts openTool={openTool} />
+            <ShowcaseStats />
           </>
         )}
 
@@ -154,6 +181,24 @@ export function App({ initialToolState, onToolStateChange, onResetAll, onRestore
         {section === "extensions" && <ExtensionsPage />}
         {section === "settings" && <SettingsPage toolState={toolState} onResetAll={onResetAll} onRestoreBackup={onRestoreBackup} />}
       </main>
+      <CommandPalette
+        open={paletteOpen}
+        onClose={() => setPaletteOpen(false)}
+        onOpenTool={(toolId) => {
+          setSection("tools");
+          openTool(toolId);
+          setPaletteOpen(false);
+        }}
+        onNavigate={(target) => {
+          setSection(target);
+          setActiveToolId(null);
+          setPaletteOpen(false);
+        }}
+        onToggleProjection={() => {
+          updateSettings({ projectionMode: !settings.projectionMode });
+          setPaletteOpen(false);
+        }}
+      />
     </div>
   );
 }

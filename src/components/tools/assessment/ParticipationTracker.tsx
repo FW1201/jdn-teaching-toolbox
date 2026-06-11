@@ -6,6 +6,7 @@ import { useRoster } from "../../../providers/RosterProvider";
 import { useToast } from "../../../hooks/useToast";
 import { InputField, Panel, mergeState } from "../../shared";
 import type { ToolProps } from "../../shared";
+import { StatBar } from "../../ui/StatBar";
 
 export function ParticipationTracker({ state, setState }: ToolProps) {
   const { roster } = useRoster();
@@ -30,7 +31,14 @@ export function ParticipationTracker({ state, setState }: ToolProps) {
         <div className="student-button-grid">{roster.map((student) => <button key={student.id} onClick={() => record(student)}>{student.seatNo} {student.name}<span>{value.counts[student.id] ?? 0}</span></button>)}</div>
       </Panel>
       <Panel title="參與次數排序（少→多）" action={<button className="ghost-button" onClick={() => { downloadText("participation.csv", ["時間,座號,姓名,事件", ...value.history].join("\n"), "text/csv;charset=utf-8"); notify("已匯出參與紀錄 CSV", "success"); }}><Download size={16} />CSV</button>}>
-        <div className="result-list scroll">{sorted.map((student) => <div className={`result-row${(value.counts[student.id] ?? 0) === 0 ? " is-zero" : ""}`} key={student.id}><span>{student.seatNo} {student.name}</span><strong>{value.counts[student.id] ?? 0}</strong></div>)}</div>
+        <div className="result-list scroll">
+          {sorted.map((student) => {
+            const count = value.counts[student.id] ?? 0;
+            const maxCount = Math.max(1, ...roster.map((entry) => value.counts[entry.id] ?? 0));
+            const tone = count === 0 ? "danger" : count === maxCount ? "green" : "neutral";
+            return <StatBar key={student.id} label={`${student.seatNo} ${student.name}`} value={count} max={maxCount} tone={tone} />;
+          })}
+        </div>
       </Panel>
     </div>
   );

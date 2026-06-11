@@ -4,9 +4,10 @@ import { Download, Eraser, Plus, Redo2, Trash2, Undo2 } from "lucide-react";
 import { useToast } from "../../../hooks/useToast";
 import { InputField, Panel, mergeState } from "../../shared";
 import type { ToolProps } from "../../shared";
+import { ConfirmButton } from "../../ui/ConfirmButton";
 
 export function WhiteboardTool({ state, setState }: ToolProps) {
-  const value = mergeState(state, { color: "#00d4ff", width: 4, notes: [] as Array<{ id: string; text: string }> });
+  const value = mergeState(state, { color: "#fcd535", width: 4, notes: [] as Array<{ id: string; text: string }> });
   const { notify } = useToast();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const drawing = useRef(false);
@@ -108,7 +109,7 @@ export function WhiteboardTool({ state, setState }: ToolProps) {
           <button className="secondary-button" disabled={!redoStack.current.length} onClick={redo}><Redo2 size={16} />重做</button>
         </div>
         <button className="secondary-button" onClick={() => setState({ ...value, notes: [...value.notes, { id: crypto.randomUUID(), text: "便利貼" }] })}><Plus size={16} />便利貼</button>
-        <button className="secondary-button" onClick={clear}><Eraser size={16} />清除</button>
+        <ConfirmButton onConfirm={clear}><Eraser size={16} />清除</ConfirmButton>
         <button className="primary-button" onClick={download}><Download size={16} />PNG</button>
       </Panel>
       <Panel title="畫布">

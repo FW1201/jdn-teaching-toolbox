@@ -146,3 +146,29 @@ export function textLines(value: string) {
     .map((line) => line.trim())
     .filter(Boolean);
 }
+
+export interface ToolSearchFields {
+  name: string;
+  summary: string;
+  detail: string;
+  category: string;
+  tags: string[];
+  subjects: string[];
+  grades: string[];
+}
+
+/** 搜尋相關度：名稱 > 標籤 > 分類/科目 > 摘要 > 其餘欄位，0 表示不符合 */
+export function scoreToolMatch(tool: ToolSearchFields, query: string): number {
+  const q = query.trim().toLowerCase();
+  if (!q) return 0;
+  const name = tool.name.toLowerCase();
+  let score = 0;
+  if (name === q) score += 100;
+  else if (name.startsWith(q)) score += 60;
+  else if (name.includes(q)) score += 50;
+  if (tool.tags.some((tag) => tag.toLowerCase().includes(q))) score += 30;
+  if (tool.category.toLowerCase().includes(q) || tool.subjects.some((s) => s.toLowerCase().includes(q))) score += 20;
+  if (tool.summary.toLowerCase().includes(q)) score += 10;
+  if (tool.detail.toLowerCase().includes(q) || tool.grades.some((g) => g.toLowerCase().includes(q))) score += 5;
+  return score;
+}

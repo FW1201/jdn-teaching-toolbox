@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildGroups, createBingoCards, createSeatingCells, createWordSearch, parseRoster, rosterToCsv, stableStudentId } from "./toolLogic";
+import { buildGroups, createBingoCards, createSeatingCells, createWordSearch, parseRoster, rosterToCsv, scoreToolMatch, stableStudentId } from "./toolLogic";
 
 describe("roster parsing", () => {
   it("parses csv rows with notes", () => {
@@ -38,5 +38,25 @@ describe("classroom generators", () => {
     const cards = createBingoCards(["A", "B", "C", "D"], 3, 2);
     expect(cards).toHaveLength(2);
     expect(cards[0]).toHaveLength(3);
+  });
+});
+
+describe("tool search relevance", () => {
+  const base = { summary: "", detail: "", category: "", tags: [] as string[], subjects: [] as string[], grades: [] as string[] };
+  const nameHit = { ...base, name: "倒數計時器" };
+  const tagHit = { ...base, name: "交通燈", tags: ["計時", "節奏"] };
+  const summaryHit = { ...base, name: "工作模式", summary: "搭配計時使用" };
+  const noHit = { ...base, name: "賓果" };
+
+  it("ranks name match above tag match above summary match", () => {
+    const query = "計時";
+    const scores = [nameHit, tagHit, summaryHit].map((tool) => scoreToolMatch(tool, query));
+    expect(scores[0]).toBeGreaterThan(scores[1]);
+    expect(scores[1]).toBeGreaterThan(scores[2]);
+  });
+
+  it("returns zero when nothing matches or query is empty", () => {
+    expect(scoreToolMatch(noHit, "計時")).toBe(0);
+    expect(scoreToolMatch(nameHit, "  ")).toBe(0);
   });
 });
