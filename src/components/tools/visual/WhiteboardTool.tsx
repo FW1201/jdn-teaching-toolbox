@@ -6,7 +6,7 @@ import { InputField, Panel, mergeState } from "../../shared";
 import type { ToolProps } from "../../shared";
 
 export function WhiteboardTool({ state, setState }: ToolProps) {
-  const value = mergeState(state, { color: "#00d4ff", width: 4, notes: [] as Array<{ id: string; text: string }> });
+  const value = mergeState(state, { color: "#fcd535", width: 4, notes: [] as Array<{ id: string; text: string }> });
   const { notify } = useToast();
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const drawing = useRef(false);

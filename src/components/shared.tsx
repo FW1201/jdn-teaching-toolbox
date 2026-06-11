@@ -20,7 +20,7 @@ export function mergeState<T extends object>(state: unknown, fallback: T): T {
 export async function exportElementAsPng(elementId: string, filename: string) {
   const element = document.getElementById(elementId);
   if (!element) return;
-  const url = await toPng(element, { pixelRatio: 2, backgroundColor: "#0d1117" });
+  const url = await toPng(element, { pixelRatio: 2, backgroundColor: "#0b0e11" });
   const link = document.createElement("a");
   link.download = filename;
   link.href = url;

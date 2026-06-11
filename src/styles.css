@@ -1,27 +1,35 @@
 :root {
   color-scheme: dark;
-  --bg: #0d1117;
-  --panel: #111827;
-  --panel-2: #151c29;
-  --line: rgba(230, 237, 243, 0.12);
-  --line-strong: rgba(0, 212, 255, 0.34);
-  --text: #e6edf3;
-  --muted: #93a4b8;
-  --primary: #00d4ff;
-  --secondary: #7b2fff;
-  --accent: #ff6b35;
-  --green: #39d98a;
-  --yellow: #ffd166;
-  --danger: #ff5470;
+  /* Binance design system tokens (DESIGN.md) — 變數名沿用舊系統，只換值 */
+  --bg: #0b0e11;
+  --panel: #181a20;
+  --panel-2: #1e2329;
+  --line: #2b3139;
+  --line-strong: rgba(252, 213, 53, 0.45);
+  --text: #eaecef;
+  --muted: #929aa5;
+  --text-tertiary: #707a8a; /* 僅限裝飾性小字，對比不足 AA */
+  --primary: #fcd535;
+  --secondary: #2b3139; /* 紫色退場：改為中性浮起灰，供次要按鈕底色 */
+  --accent: #f0b90b; /* 橙色退場：改為深一階品牌黃（漸層終點/強調） */
+  --green: #0ecb81;
+  --yellow: #fcd535;
+  --danger: #f6465d;
+  --primary-hover: #f0b90b; /* DESIGN.md: press/active 為深黃 */
+  --on-primary: #181a20;
+  --bg-elevated: #2b3139;
+  --focus-ring: rgba(59, 130, 246, 0.55); /* DESIGN.md info ring：黃鈕上黃環不可見 */
   --radius: 8px;
-  --radius-lg: 20px;
+  --radius-lg: 12px;
+  --radius-btn: 6px;
   --radius-pill: 999px;
   --content-max: 1640px;
   --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
-  --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.2);
-  --shadow-hover: 0 22px 55px rgba(0, 0, 0, 0.34), 0 0 0 1px var(--line-strong);
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.32);
+  --shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(252, 213, 53, 0.25);
   --font-scale: 1;
-  font-family: "Noto Sans TC", "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-number: "IBM Plex Sans", "Inter", "Noto Sans TC", system-ui, sans-serif; /* BinancePlex 替代 */
+  font-family: "Inter", "Noto Sans TC", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   background: var(--bg);
   color: var(--text);
 }
@@ -34,8 +42,8 @@ body {
   margin: 0;
   min-width: 320px;
   background:
-    linear-gradient(135deg, rgba(0, 212, 255, 0.08), transparent 34%),
-    linear-gradient(315deg, rgba(255, 107, 53, 0.07), transparent 32%),
+    linear-gradient(135deg, color-mix(in srgb, var(--primary) 8%, transparent), transparent 34%),
+    linear-gradient(315deg, color-mix(in srgb, var(--accent) 7%, transparent), transparent 32%),
     var(--bg);
   font-size: calc(16px * var(--font-scale));
 }
@@ -71,7 +79,7 @@ button:disabled,
   height: 100vh;
   padding: 18px;
   border-right: 1px solid var(--line);
-  background: rgba(13, 17, 23, 0.84);
+  background: color-mix(in srgb, var(--bg) 84%, transparent);
   backdrop-filter: blur(16px);
 }
 
@@ -90,7 +98,7 @@ button:disabled,
   place-items: center;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius);
-  background: #101722;
+  background: var(--panel-2);
   color: var(--primary);
   font-weight: 800;
 }
@@ -135,7 +143,7 @@ button:disabled,
 .side-nav button.active,
 .side-nav button:hover {
   border-color: var(--line-strong);
-  background: rgba(0, 212, 255, 0.08);
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
 }
 
 .side-nav small {
@@ -231,7 +239,7 @@ h3 {
   padding: 0 14px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgba(17, 24, 39, 0.86);
+  background: color-mix(in srgb, var(--panel) 86%, transparent);
 }
 
 .search-box input,
@@ -243,7 +251,7 @@ h3 {
   width: 100%;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: #0f1622;
+  background: var(--panel-2);
   color: var(--text);
   outline: none;
 }
@@ -280,7 +288,7 @@ h3 {
   padding: 0 10px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgba(17, 24, 39, 0.86);
+  background: color-mix(in srgb, var(--panel) 86%, transparent);
 }
 
 .select-pill select {
@@ -305,7 +313,7 @@ h3 {
   min-height: 42px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgba(17, 24, 39, 0.72);
+  background: color-mix(in srgb, var(--panel) 72%, transparent);
   color: var(--text);
 }
 
@@ -320,8 +328,8 @@ h3 {
 .category-chips button.active,
 .quick-buttons button.active {
   border-color: var(--primary);
-  background: rgba(0, 212, 255, 0.12);
-  color: #f8fdff;
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
+  color: var(--text);
 }
 
 .showcase-stats {
@@ -335,7 +343,7 @@ h3 {
   padding: 14px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgba(17, 24, 39, 0.72);
+  background: color-mix(in srgb, var(--panel) 72%, transparent);
 }
 
 .showcase-stats strong,
@@ -369,7 +377,7 @@ h3 {
   padding: 14px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgba(13, 17, 23, 0.66);
+  background: color-mix(in srgb, var(--bg) 66%, transparent);
 }
 
 .tool-card-grid,
@@ -386,7 +394,7 @@ h3 {
 .tool-detail-panel {
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgba(17, 24, 39, 0.82);
+  background: color-mix(in srgb, var(--panel) 82%, transparent);
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.2);
 }
 
@@ -409,7 +417,7 @@ h3 {
   height: 48px;
   place-items: center;
   border-radius: var(--radius);
-  background: rgba(0, 212, 255, 0.1);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
   color: var(--primary);
 }
 
@@ -460,9 +468,9 @@ h3 {
 }
 
 .primary-button {
-  border: 1px solid rgba(0, 212, 255, 0.7);
+  border: 1px solid color-mix(in srgb, var(--primary) 70%, transparent);
   background: var(--primary);
-  color: #061016;
+  color: var(--on-primary);
   font-weight: 800;
 }
 
@@ -476,8 +484,8 @@ h3 {
 }
 
 .danger-button {
-  border: 1px solid rgba(255, 84, 112, 0.55);
-  background: rgba(255, 84, 112, 0.12);
+  border: 1px solid color-mix(in srgb, var(--danger) 55%, transparent);
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
   color: #ffdce3;
 }
 
@@ -485,7 +493,7 @@ h3 {
   width: 40px;
   padding: 0;
   border: 1px solid var(--line);
-  background: #0f1622;
+  background: var(--panel-2);
   color: var(--muted);
 }
 
@@ -506,7 +514,7 @@ h3 {
   padding: 12px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgba(13, 17, 23, 0.94);
+  background: color-mix(in srgb, var(--bg) 94%, transparent);
   backdrop-filter: blur(16px);
 }
 
@@ -564,7 +572,7 @@ h3 {
   padding: 7px 9px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgba(13, 17, 23, 0.55);
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
   color: var(--text);
   text-align: left;
 }
@@ -581,7 +589,7 @@ h3 {
   padding: 32px;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius);
-  background: rgba(17, 24, 39, 0.82);
+  background: color-mix(in srgb, var(--panel) 82%, transparent);
   text-align: center;
 }
 
@@ -616,7 +624,7 @@ h3 {
   padding: 8px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgba(13, 17, 23, 0.55);
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
 }
 
 .list-row {
@@ -674,7 +682,7 @@ h3 {
   padding: 22px;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius);
-  background: #0c121d;
+  background: var(--bg);
   text-align: center;
 }
 
@@ -740,7 +748,7 @@ h3 {
   height: 78%;
   place-items: center;
   border-radius: 50%;
-  background: #0c121d;
+  background: var(--bg);
   font-size: clamp(2rem, 7vw, 4.7rem);
   font-weight: 900;
 }
@@ -781,14 +789,14 @@ h3 {
   padding: 14px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: #0f1622;
+  background: var(--panel-2);
   color: var(--text);
 }
 
 .traffic-dot.green.active,
 .status-banner.green {
   border-color: var(--green);
-  background: rgba(57, 217, 138, 0.14);
+  background: color-mix(in srgb, var(--green) 14%, transparent);
 }
 
 .traffic-dot.yellow.active,
@@ -800,7 +808,7 @@ h3 {
 .traffic-dot.red.active,
 .status-banner.red {
   border-color: var(--danger);
-  background: rgba(255, 84, 112, 0.14);
+  background: color-mix(in srgb, var(--danger) 14%, transparent);
 }
 
 .status-banner {
@@ -821,7 +829,7 @@ h3 {
 
 .symbol-card.active {
   border-color: var(--primary);
-  background: rgba(0, 212, 255, 0.12);
+  background: color-mix(in srgb, var(--primary) 12%, transparent);
 }
 
 .table-like {
@@ -855,7 +863,7 @@ h3 {
   min-height: 72px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: #0f1622;
+  background: var(--panel-2);
   color: var(--text);
 }
 
@@ -890,9 +898,10 @@ h3 {
   aspect-ratio: 1;
   place-items: center;
   margin: 0 auto 16px;
-  border: 12px solid rgba(0, 212, 255, 0.24);
+  border: 12px solid color-mix(in srgb, var(--primary) 24%, transparent);
   border-radius: 50%;
-  background: conic-gradient(from 0deg, rgba(0, 212, 255, 0.24), rgba(255, 107, 53, 0.2), rgba(123, 47, 255, 0.2), rgba(57, 217, 138, 0.18), rgba(0, 212, 255, 0.24));
+  /* 轉盤分段配色：黃 / 綠 / 深黃 / 紅，維持視覺分段又收斂在 Binance 語彙 */
+  background: conic-gradient(from 0deg, color-mix(in srgb, var(--primary) 24%, transparent), color-mix(in srgb, var(--green) 20%, transparent), color-mix(in srgb, var(--accent) 20%, transparent), color-mix(in srgb, var(--danger) 16%, transparent), color-mix(in srgb, var(--primary) 24%, transparent));
   transition: transform 900ms ease;
 }
 
@@ -901,7 +910,7 @@ h3 {
   max-width: 160px;
   padding: 6px 8px;
   border-radius: 999px;
-  background: rgba(13, 17, 23, 0.74);
+  background: color-mix(in srgb, var(--bg) 74%, transparent);
 }
 
 .group-grid {
@@ -960,7 +969,7 @@ h3 {
   padding: 10px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: #0f1622;
+  background: var(--panel-2);
 }
 
 .rubric-grid select {
@@ -968,7 +977,7 @@ h3 {
   min-height: 38px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: #0c121d;
+  background: var(--bg);
   color: var(--text);
 }
 
@@ -1011,12 +1020,12 @@ h3 {
   padding: 8px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: #0f1622;
+  background: var(--panel-2);
 }
 
 .check-matrix button.checked {
   border-color: var(--green);
-  background: rgba(57, 217, 138, 0.14);
+  background: color-mix(in srgb, var(--green) 14%, transparent);
   color: var(--green);
 }
 
@@ -1053,7 +1062,7 @@ h3 {
   padding: 8px 14px;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius);
-  background: rgba(0, 212, 255, 0.1);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
   color: var(--text);
 }
 
@@ -1078,7 +1087,7 @@ h3 {
   place-items: center;
   border: 1px solid var(--line);
   border-radius: 4px;
-  background: #0f1622;
+  background: var(--panel-2);
   font-weight: 800;
 }
 
@@ -1111,7 +1120,7 @@ h3 {
   padding: 14px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: #0f1622;
+  background: var(--panel-2);
   text-align: left;
   line-height: 1.8;
 }
@@ -1134,7 +1143,7 @@ h3 {
   padding: 16px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: #0f1622;
+  background: var(--panel-2);
 }
 
 .dice-result span,
@@ -1197,7 +1206,7 @@ h3 {
   padding: 12px;
   border: 1px dashed var(--line-strong);
   border-radius: var(--radius);
-  background: rgba(0, 212, 255, 0.05);
+  background: color-mix(in srgb, var(--primary) 5%, transparent);
 }
 
 .sort-column button {
@@ -1211,17 +1220,17 @@ h3 {
   min-height: 420px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: #0c121d;
+  background: var(--bg);
 }
 
 .concept-svg line,
 .coordinate-board line {
-  stroke: rgba(230, 237, 243, 0.34);
+  stroke: color-mix(in srgb, var(--text) 34%, transparent);
   stroke-width: 2;
 }
 
 .concept-svg circle {
-  fill: rgba(0, 212, 255, 0.16);
+  fill: color-mix(in srgb, var(--primary) 16%, transparent);
   stroke: var(--primary);
 }
 
@@ -1258,7 +1267,7 @@ h3 {
   padding: 12px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: #0f1622;
+  background: var(--panel-2);
 }
 
 .timeline span,
@@ -1372,7 +1381,7 @@ h3 {
 .status-pill {
   display: inline-flex;
   margin-bottom: 10px;
-  border-color: rgba(57, 217, 138, 0.4);
+  border-color: color-mix(in srgb, var(--green) 40%, transparent);
   color: var(--green);
 }
 
@@ -1391,7 +1400,7 @@ h3 {
 }
 
 .notice-row.success {
-  border-color: rgba(57, 217, 138, 0.45);
+  border-color: color-mix(in srgb, var(--green) 45%, transparent);
 }
 
 .notice-row.warning {
@@ -1593,7 +1602,7 @@ h3 {
 }
 
 .primary-button:hover {
-  box-shadow: 0 10px 26px rgba(0, 212, 255, 0.32);
+  box-shadow: 0 10px 26px color-mix(in srgb, var(--primary) 32%, transparent);
   transform: translateY(-1px);
 }
 .secondary-button:hover,
@@ -1601,10 +1610,10 @@ h3 {
 .icon-text:hover,
 .icon-only:hover {
   border-color: var(--line-strong);
-  background: rgba(0, 212, 255, 0.08);
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
 }
 .danger-button:hover {
-  background: rgba(255, 84, 112, 0.2);
+  background: color-mix(in srgb, var(--danger) 20%, transparent);
   border-color: var(--danger);
 }
 .primary-button:active,
@@ -1686,7 +1695,7 @@ h3 {
 .sort-column.drop-active,
 .piece-board.drop-active {
   border-color: var(--primary);
-  background: rgba(0, 212, 255, 0.08);
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
   box-shadow: inset 0 0 0 1px var(--line-strong);
 }
 [draggable="true"] {
@@ -1716,13 +1725,13 @@ h3 {
   padding: 11px 14px;
   border: 1px solid var(--line-strong);
   border-radius: var(--radius);
-  background: rgba(13, 17, 23, 0.96);
+  background: color-mix(in srgb, var(--bg) 96%, transparent);
   color: var(--text);
   box-shadow: var(--shadow-soft);
   font-size: 0.9rem;
   animation: toast-in 0.22s var(--ease);
 }
-.toast.success { border-color: rgba(57, 217, 138, 0.6); }
+.toast.success { border-color: color-mix(in srgb, var(--green) 60%, transparent); }
 .toast.error { border-color: var(--danger); }
 .toast .toast-icon { color: var(--primary); display: inline-flex; }
 .toast.success .toast-icon { color: var(--green); }
@@ -1746,7 +1755,7 @@ h3 {
   border: 1px solid var(--line);
   border-bottom-width: 2px;
   border-radius: 6px;
-  background: rgba(13, 17, 23, 0.7);
+  background: color-mix(in srgb, var(--bg) 70%, transparent);
   color: var(--text);
   font-size: 0.74rem;
 }
@@ -1787,7 +1796,7 @@ h3 {
   overflow-y: auto;
 }
 .result-row.is-zero {
-  border-color: rgba(255, 107, 53, 0.5);
+  border-color: color-mix(in srgb, var(--accent) 50%, transparent);
 }
 .result-row.is-zero strong {
   color: var(--accent);
@@ -1804,7 +1813,7 @@ h3 {
 
 /* 字詞搜尋：解答格高亮 */
 .word-grid span.found {
-  background: rgba(0, 212, 255, 0.22);
+  background: color-mix(in srgb, var(--primary) 22%, transparent);
   border-color: var(--line-strong);
   color: var(--primary);
   font-weight: 800;
@@ -1812,8 +1821,8 @@ h3 {
 
 /* 賓果中央 FREE 格 */
 .bingo-card span.bingo-free {
-  background: rgba(123, 47, 255, 0.22);
-  border-color: rgba(123, 47, 255, 0.6);
+  background: color-mix(in srgb, var(--primary) 22%, transparent);
+  border-color: color-mix(in srgb, var(--primary) 60%, transparent);
   color: var(--text);
   font-weight: 800;
 }
@@ -1848,7 +1857,7 @@ h3 {
   padding: 0;
   border: 1px solid var(--line);
   border-radius: 999px;
-  background: rgba(13, 17, 23, 0.92);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
   color: var(--danger);
   opacity: 0;
   transition: opacity 0.15s var(--ease);
@@ -1859,11 +1868,11 @@ h3 {
 
 /* 座標平面：格線淡、軸線強 */
 .coordinate-board .grid line {
-  stroke: rgba(230, 237, 243, 0.1);
+  stroke: color-mix(in srgb, var(--text) 10%, transparent);
   stroke-width: 1;
 }
 .coordinate-board .axis-line {
-  stroke: rgba(0, 212, 255, 0.55);
+  stroke: color-mix(in srgb, var(--primary) 55%, transparent);
   stroke-width: 2;
 }
 
@@ -1941,7 +1950,7 @@ h3 {
 }
 
 .showcase-stats div:hover {
-  border-color: rgba(0, 212, 255, 0.3);
+  border-color: color-mix(in srgb, var(--primary) 30%, transparent);
 }
 
 .workspace-header {
@@ -1984,9 +1993,9 @@ h3 {
   gap: 8px;
   padding: 4px 12px;
   margin-bottom: 8px;
-  border: 1px solid rgba(0, 212, 255, 0.35);
+  border: 1px solid color-mix(in srgb, var(--primary) 35%, transparent);
   border-radius: 999px;
-  background: rgba(0, 212, 255, 0.08);
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
   color: var(--primary);
   font-size: 0.76rem;
   font-weight: 600;
@@ -2039,12 +2048,12 @@ h3 {
 }
 
 .side-nav button:hover {
-  background: rgba(0, 212, 255, 0.07);
+  background: color-mix(in srgb, var(--primary) 7%, transparent);
   border-color: var(--line);
 }
 
 .side-nav button.active {
-  background: rgba(0, 212, 255, 0.11);
+  background: color-mix(in srgb, var(--primary) 11%, transparent);
   border-color: var(--line-strong);
 }
 
@@ -2078,7 +2087,7 @@ h3 {
   height: 36px;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: rgba(13, 17, 23, 0.6);
+  background: color-mix(in srgb, var(--bg) 60%, transparent);
   color: var(--muted);
   text-decoration: none;
   transition: border-color 0.15s var(--ease), color 0.15s var(--ease), background 0.15s var(--ease);
@@ -2087,7 +2096,7 @@ h3 {
 .social-link:hover {
   border-color: var(--line-strong);
   color: var(--primary);
-  background: rgba(0, 212, 255, 0.1);
+  background: color-mix(in srgb, var(--primary) 10%, transparent);
 }
 
 .sidebar-dev-note {
@@ -2108,7 +2117,7 @@ h3 {
 }
 
 .primary-button:hover:not(:disabled) {
-  box-shadow: 0 4px 16px rgba(0, 212, 255, 0.25);
+  box-shadow: 0 4px 16px color-mix(in srgb, var(--primary) 25%, transparent);
   transform: translateY(-1px);
 }
 
@@ -2118,7 +2127,7 @@ h3 {
 }
 
 .ghost-button:hover:not(:disabled) {
-  background: rgba(0, 212, 255, 0.08);
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
 }
 
 /* ── Panel 微調：更多留白感 ───────────────────────────────── */
@@ -2227,22 +2236,22 @@ h3 {
 .showcase-stats div {
   border-radius: var(--radius-lg);
   background: linear-gradient(135deg,
-    rgba(0, 212, 255, 0.06) 0%,
-    rgba(13, 17, 23, 0.82) 100%);
+    color-mix(in srgb, var(--primary) 6%, transparent) 0%,
+    color-mix(in srgb, var(--bg) 82%, transparent) 100%);
 }
 
 .workflow-shortcuts article {
   border-radius: var(--radius-lg);
   background: linear-gradient(135deg,
-    rgba(123, 47, 255, 0.07) 0%,
-    rgba(13, 17, 23, 0.72) 100%);
+    color-mix(in srgb, var(--primary) 7%, transparent) 0%,
+    color-mix(in srgb, var(--bg) 72%, transparent) 100%);
 }
 
 .workflow-shortcuts article:hover {
-  border-color: rgba(123, 47, 255, 0.45);
+  border-color: color-mix(in srgb, var(--primary) 45%, transparent);
   background: linear-gradient(135deg,
-    rgba(123, 47, 255, 0.12) 0%,
-    rgba(13, 17, 23, 0.82) 100%);
+    color-mix(in srgb, var(--primary) 12%, transparent) 0%,
+    color-mix(in srgb, var(--bg) 82%, transparent) 100%);
 }
 
 /* ── 4. 工具卡 hairline + 精緻 shadow（Figma level-1 elevation） */
@@ -2251,14 +2260,14 @@ h3 {
 .extension-card,
 .panel,
 .tool-detail-panel {
-  border-color: rgba(230, 237, 243, 0.1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(230, 237, 243, 0.06);
+  border-color: color-mix(in srgb, var(--text) 10%, transparent);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 0 0 1px color-mix(in srgb, var(--text) 6%, transparent);
 }
 
 .tool-card:hover,
 .resource-card:hover {
-  border-color: rgba(0, 212, 255, 0.4);
-  box-shadow: 0 4px 24px rgba(0, 212, 255, 0.12), 0 0 0 1px rgba(0, 212, 255, 0.25);
+  border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+  box-shadow: 0 4px 24px color-mix(in srgb, var(--primary) 12%, transparent), 0 0 0 1px color-mix(in srgb, var(--primary) 25%, transparent);
 }
 
 /* ── 5. 輸入欄 focus ring（Figma「ring, not fill」） */
@@ -2267,13 +2276,13 @@ h3 {
 .field select:focus,
 .list-row input:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.18);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 18%, transparent);
   outline: none;
 }
 
 .search-box:focus-within {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.15);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary) 15%, transparent);
 }
 
 /* ── 6. Panel 標題更精緻（Figma card-title 質感） */
@@ -2291,15 +2300,15 @@ h3 {
 .poll-card,
 .qr-card {
   border-radius: var(--radius-lg);
-  background: linear-gradient(160deg, #0e1620 0%, #0c121d 100%);
+  background: linear-gradient(160deg, var(--panel) 0%, var(--bg) 100%);
 }
 
 /* ── 8. 工具圖示色塊（Figma block-lilac 對映次色） ─────── */
 .tool-icon {
   border-radius: 12px;
   background: linear-gradient(135deg,
-    rgba(123, 47, 255, 0.15) 0%,
-    rgba(0, 212, 255, 0.10) 100%);
+    color-mix(in srgb, var(--primary) 15%, transparent) 0%,
+    color-mix(in srgb, var(--primary) 10%, transparent) 100%);
   color: var(--primary);
 }
 
@@ -2336,5 +2345,5 @@ h3 {
 
 .workspace-header .ghost-button:hover {
   border-color: var(--line-strong);
-  background: rgba(0, 212, 255, 0.07);
+  background: color-mix(in srgb, var(--primary) 7%, transparent);
 }
