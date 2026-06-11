@@ -2885,3 +2885,10 @@ h3 {
 .timer-display strong {
   font-size: clamp(2rem, 6.5vw, 4.2rem);
 }
+
+/* 隊名/名單避免逐字斷行 */
+.score-row strong,
+.result-row span,
+.stat-bar-label {
+  word-break: keep-all;
+}
