@@ -4,6 +4,8 @@ import { useExport } from "../../../providers/ExportProvider";
 import { useToast } from "../../../hooks/useToast";
 import { InputField, Panel, mergeState } from "../../shared";
 import type { ToolProps } from "../../shared";
+import { ConfirmButton } from "../../ui/ConfirmButton";
+import { StatBar } from "../../ui/StatBar";
 
 export function QuickPoll({ state, setState }: ToolProps) {
   const { downloadText } = useExport();
@@ -44,7 +46,7 @@ export function QuickPoll({ state, setState }: ToolProps) {
               {value.options.map((option, index) => (
                 <div className="list-row" key={index}>
                   <input value={option} onChange={(event) => updateOption(index, event.target.value)} />
-                  <button className="icon-only" onClick={() => setState({ ...value, options: value.options.filter((_, itemIndex) => itemIndex !== index), votes: value.votes.filter((_, itemIndex) => itemIndex !== index) })}><Trash2 size={16} /></button>
+                  <button className="icon-only" aria-label="刪除選項" onClick={() => setState({ ...value, options: value.options.filter((_, itemIndex) => itemIndex !== index), votes: value.votes.filter((_, itemIndex) => itemIndex !== index) })}><Trash2 size={16} /></button>
                 </div>
               ))}
             </div>
@@ -67,15 +69,21 @@ export function QuickPoll({ state, setState }: ToolProps) {
         {value.mode === "poll" ? (
           <div className="poll-card">
             <h3>{value.question}</h3>
-            {value.options.map((option, index) => (
-              <div className="poll-row" key={option}>
-                <button onClick={() => addVote(index, -1)} aria-label="減一票"><Minus size={15} /></button>
-                <button onClick={() => addVote(index, 1)}>+1</button>
-                <span>{option}</span>
-                <div className="bar"><i style={{ width: `${((value.votes[index] ?? 0) / max) * 100}%` }} /></div>
-                <strong>{value.votes[index] ?? 0}</strong>
-              </div>
-            ))}
+            {value.options.map((option, index) => {
+              const votes = value.votes[index] ?? 0;
+              const total = value.votes.reduce((sum, count) => sum + count, 0);
+              const pct = total > 0 ? Math.round((votes / total) * 100) : 0;
+              const leading = votes > 0 && votes === Math.max(...value.votes);
+              return (
+                <div className="poll-row" key={option}>
+                  <button onClick={() => addVote(index, -1)} aria-label={`${option} 減一票`}><Minus size={15} /></button>
+                  <button onClick={() => addVote(index, 1)} aria-label={`${option} 加一票`}>+1</button>
+                  <span>{option}</span>
+                  <StatBar value={votes} max={max} tone={leading ? "primary" : "neutral"} showValue={false} />
+                  <strong>{votes} 票 · {pct}%</strong>
+                </div>
+              );
+            })}
           </div>
         ) : (
           <div className="poll-card">
@@ -90,7 +98,7 @@ export function QuickPoll({ state, setState }: ToolProps) {
                 </button>
               ))}
             </div>
-            <button className="secondary-button" onClick={() => setState({ ...value, counts: [0, 0, 0, 0, 0] })}>清空統計</button>
+            <ConfirmButton onConfirm={() => setState({ ...value, counts: [0, 0, 0, 0, 0] })}>清空統計</ConfirmButton>
           </div>
         )}
       </Panel>

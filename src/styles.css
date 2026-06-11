@@ -2778,3 +2778,110 @@ h3 {
 .projection-mode .hotkey-hint {
   display: none;
 }
+
+/* ════════════════════════════════════════════════════════════
+   Binance 重構 Phase 6：StatBar + 工作區動作列規範
+   ════════════════════════════════════════════════════════════ */
+
+/* ── StatBar 橫條統計（深度圖語感）── */
+.stat-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: 30px;
+}
+
+.stat-bar-label {
+  flex-shrink: 0;
+  min-width: 96px;
+  color: var(--text);
+  font-size: 0.88rem;
+}
+
+.stat-bar-track {
+  flex: 1;
+  height: 10px;
+  min-width: 40px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--bg-elevated);
+}
+
+.stat-bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: var(--muted);
+  transition: width 0.3s var(--ease);
+}
+
+.stat-bar-value {
+  flex-shrink: 0;
+  min-width: 36px;
+  color: var(--text);
+  font-family: var(--font-number);
+  font-style: normal;
+  font-weight: 600;
+  text-align: right;
+}
+
+.stat-bar.tone-primary .stat-bar-fill {
+  background: var(--primary);
+}
+
+.stat-bar.tone-primary .stat-bar-value {
+  color: var(--primary);
+}
+
+.stat-bar.tone-green .stat-bar-fill {
+  background: var(--green);
+}
+
+.stat-bar.tone-green .stat-bar-value {
+  color: var(--green);
+}
+
+.stat-bar.tone-danger .stat-bar-fill {
+  background: color-mix(in srgb, var(--danger) 65%, transparent);
+}
+
+.stat-bar.tone-danger .stat-bar-value {
+  color: var(--danger);
+}
+
+/* 計分板：排名列 + 賽道條 */
+.score-entry {
+  display: grid;
+  gap: 4px;
+  padding: 8px;
+  border-radius: var(--radius);
+}
+
+.score-entry:hover {
+  background: color-mix(in srgb, var(--panel) 60%, transparent);
+}
+
+/* 投票列內的 StatBar 佔軌道格 */
+.poll-row .stat-bar {
+  min-height: auto;
+}
+
+/* ── 工作區動作列規範：危險動作推到最右、物理隔離 ── */
+.action-row {
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.action-row .danger-button {
+  margin-left: auto;
+  order: 99;
+}
+
+/* ── 投影字級修正：fontScale 1.35 × 大屏不破版 ── */
+.projection-card h2,
+.winner-display,
+.stopwatch-display,
+.timer-display strong {
+  font-size: clamp(2rem, 6.5vw, 4.2rem);
+}

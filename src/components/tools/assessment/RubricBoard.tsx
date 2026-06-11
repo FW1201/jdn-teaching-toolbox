@@ -25,7 +25,7 @@ export function RubricBoard({ state, setState }: ToolProps) {
         <InputField label="規準名稱" value={value.title} onChange={(title) => setState({ ...value, title })} />
         <label className="field"><span>評量對象（每行一個）</span><textarea rows={4} value={value.targets} onChange={(event) => setState({ ...value, targets: event.target.value })} /></label>
         <div className="list-editor">
-          {value.criteria.map((criterion, index) => <div className="list-row compact-row" key={criterion}><input value={criterion} onChange={(event) => setState({ ...value, criteria: value.criteria.map((item, itemIndex) => itemIndex === index ? event.target.value : item) })} /><button className="icon-only" onClick={() => setState({ ...value, criteria: value.criteria.filter((_, itemIndex) => itemIndex !== index) })}><Trash2 size={16} /></button></div>)}
+          {value.criteria.map((criterion, index) => <div className="list-row compact-row" key={criterion}><input value={criterion} onChange={(event) => setState({ ...value, criteria: value.criteria.map((item, itemIndex) => itemIndex === index ? event.target.value : item) })} /><button className="icon-only" aria-label="刪除指標" onClick={() => setState({ ...value, criteria: value.criteria.filter((_, itemIndex) => itemIndex !== index) })}><Trash2 size={16} /></button></div>)}
         </div>
         <button className="secondary-button" onClick={() => setState({ ...value, criteria: [...value.criteria, `向度 ${value.criteria.length + 1}`] })}><Plus size={16} />新增向度</button>
       </Panel>

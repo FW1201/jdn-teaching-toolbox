@@ -3,6 +3,7 @@ import { escapeCsv, textLines } from "../../../lib/toolLogic";
 import { useExport } from "../../../providers/ExportProvider";
 import { useToast } from "../../../hooks/useToast";
 import { ConfirmButton } from "../../ui/ConfirmButton";
+import { StatBar } from "../../ui/StatBar";
 import { Panel, TextAreaField, mergeState } from "../../shared";
 import type { ToolProps } from "../../shared";
 
@@ -28,16 +29,23 @@ export function Scoreboard({ state, setState }: ToolProps) {
       </Panel>
       <Panel title="投影排名" action={<button className="ghost-button" onClick={() => { downloadText("scoreboard.csv", csv, "text/csv;charset=utf-8"); notify("已匯出計分結果 CSV", "success"); }}><Download size={16} />CSV</button>}>
         <div className="score-list">
-          {ranking.map((team, index) => (
-            <div className="score-row" key={team}>
-              <span>{index + 1}</span>
-              <strong>{team}</strong>
-              <button onClick={() => adjust(team, -1)}>-1</button>
-              <em>{value.scores[team] ?? 0}</em>
-              <button onClick={() => adjust(team, 1)}>+1</button>
-              <button onClick={() => adjust(team, 5)}>+5</button>
-            </div>
-          ))}
+          {ranking.map((team, index) => {
+            const score = value.scores[team] ?? 0;
+            const topScore = Math.max(1, ...ranking.map((name) => value.scores[name] ?? 0));
+            return (
+              <div className="score-entry" key={team}>
+                <div className="score-row">
+                  <span>{index + 1}</span>
+                  <strong>{team}</strong>
+                  <button onClick={() => adjust(team, -1)} aria-label={`${team} 減 1 分`}>-1</button>
+                  <em>{score}</em>
+                  <button onClick={() => adjust(team, 1)} aria-label={`${team} 加 1 分`}>+1</button>
+                  <button onClick={() => adjust(team, 5)} aria-label={`${team} 加 5 分`}>+5</button>
+                </div>
+                <StatBar value={score} max={topScore} tone={index === 0 && score > 0 ? "primary" : "neutral"} showValue={false} />
+              </div>
+            );
+          })}
         </div>
       </Panel>
     </div>
