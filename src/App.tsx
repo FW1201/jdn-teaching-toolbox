@@ -10,6 +10,8 @@ import { Sidebar } from "./components/layout/Sidebar";
 import type { Section } from "./components/layout/Sidebar";
 import { CategoryChips, ShowcaseStats, ToolCard, ToolsToolbar, WorkflowShortcuts, defaultFilter } from "./components/home/ToolsHome";
 import type { FilterState } from "./components/home/ToolsHome";
+import { QuickAccessShelf } from "./components/home/QuickAccessShelf";
+import { scoreToolMatch } from "./lib/toolLogic";
 import { ToolWorkspace } from "./components/ToolWorkspace";
 import { ExtensionsPage, GemsPage, NotebooksPage } from "./pages/ResourcePages";
 import { SettingsPage } from "./pages/SettingsPage";
@@ -41,20 +43,20 @@ export function App({ initialToolState, onToolStateChange, onResetAll, onRestore
 
   const filteredTools = useMemo(() => {
     const query = filter.query.trim().toLowerCase();
-    return toolsRegistry.filter((tool) => {
-      const matchesQuery =
-        !query ||
-        [tool.name, tool.summary, tool.detail, tool.category, ...tool.tags, ...tool.subjects, ...tool.grades]
-          .join(" ")
-          .toLowerCase()
-          .includes(query);
+    const matches = toolsRegistry.filter((tool) => {
       const matchesCategory = filter.category === "全部" || tool.category === filter.category;
       const matchesStage = filter.stage === "全部" || tool.stage.includes(filter.stage);
       const matchesRoster = filter.roster === "全部" || (filter.roster === "需名單" ? tool.needsRoster : !tool.needsRoster);
       const matchesExport = filter.exportable === "全部" || (filter.exportable === "可匯出" ? tool.canExport : tool.projectionReady);
       const matchesSubject = filter.subject === "全部" || tool.subjects.includes(filter.subject);
-      return matchesQuery && matchesCategory && matchesStage && matchesRoster && matchesExport && matchesSubject;
+      return matchesCategory && matchesStage && matchesRoster && matchesExport && matchesSubject;
     });
+    if (!query) return matches;
+    return matches
+      .map((tool) => ({ tool, score: scoreToolMatch(tool, query) }))
+      .filter((entry) => entry.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .map((entry) => entry.tool);
   }, [filter]);
 
   function updateToolState<T>(toolId: string, value: T) {
@@ -106,10 +108,9 @@ export function App({ initialToolState, onToolStateChange, onResetAll, onRestore
 
         {section === "tools" && !activeTool && (
           <>
-            <ShowcaseStats />
+            <QuickAccessShelf openTool={openTool} />
             <ToolsToolbar filter={filter} setFilter={setFilter} subjects={subjects} />
             <CategoryChips filter={filter} setFilter={setFilter} />
-            <WorkflowShortcuts openTool={openTool} />
             <section className="tool-results">
               <div className="result-heading">
                 <div>
@@ -134,6 +135,9 @@ export function App({ initialToolState, onToolStateChange, onResetAll, onRestore
                 ))}
               </div>
             </section>
+            {/* 展示性內容降到頁尾：上課動線優先 */}
+            <WorkflowShortcuts openTool={openTool} />
+            <ShowcaseStats />
           </>
         )}
 

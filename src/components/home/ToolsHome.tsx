@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { ComponentType } from "react";
 import { BarChart3, BookOpen, ChevronRight, CircleDot, Download, Filter, Grid3X3, Layers, Search, Star, Timer, Users } from "lucide-react";
 import { extensions } from "../../data/extensions";
@@ -41,22 +42,47 @@ const workflowShortcuts = [
 ];
 
 export function ToolsToolbar({ filter, setFilter, subjects }: { filter: FilterState; setFilter: (filter: FilterState) => void; subjects: string[] }) {
+  const [advancedOpen, setAdvancedOpen] = useState(false);
+  const activeCount = [filter.stage, filter.roster, filter.exportable, filter.subject].filter((value) => value !== "全部").length;
+
   return (
     <section className="toolbar">
       <label className="search-box">
         <Search size={18} />
         <input
+          id="tool-search-input"
           value={filter.query}
           onChange={(event) => setFilter({ ...filter, query: event.target.value })}
-          placeholder="搜尋工具、標籤、科目、課堂階段..."
+          placeholder="搜尋工具、標籤、科目、課堂階段...（按 / 聚焦）"
         />
       </label>
       <div className="filter-strip">
-        <SelectPill icon={Filter} label="階段" value={filter.stage} options={["全部", ...lessonStages]} onChange={(value) => setFilter({ ...filter, stage: value as FilterState["stage"] })} />
-        <SelectPill icon={Users} label="名單" value={filter.roster} options={["全部", "需名單", "不需名單"]} onChange={(value) => setFilter({ ...filter, roster: value as FilterState["roster"] })} />
-        <SelectPill icon={Download} label="匯出" value={filter.exportable} options={["全部", "可匯出", "僅投影"]} onChange={(value) => setFilter({ ...filter, exportable: value as FilterState["exportable"] })} />
-        <SelectPill icon={BookOpen} label="科目" value={filter.subject} options={subjects} onChange={(value) => setFilter({ ...filter, subject: value })} />
+        <button
+          className={`ghost-button advanced-filter-toggle ${advancedOpen || activeCount > 0 ? "active" : ""}`}
+          onClick={() => setAdvancedOpen((open) => !open)}
+          aria-expanded={advancedOpen}
+        >
+          <Filter size={16} />
+          進階篩選
+          {activeCount > 0 && <span className="filter-badge">{activeCount}</span>}
+        </button>
       </div>
+      {advancedOpen && (
+        <div className="filter-popover">
+          <SelectPill icon={Filter} label="階段" value={filter.stage} options={["全部", ...lessonStages]} onChange={(value) => setFilter({ ...filter, stage: value as FilterState["stage"] })} />
+          <SelectPill icon={Users} label="名單" value={filter.roster} options={["全部", "需名單", "不需名單"]} onChange={(value) => setFilter({ ...filter, roster: value as FilterState["roster"] })} />
+          <SelectPill icon={Download} label="匯出" value={filter.exportable} options={["全部", "可匯出", "僅投影"]} onChange={(value) => setFilter({ ...filter, exportable: value as FilterState["exportable"] })} />
+          <SelectPill icon={BookOpen} label="科目" value={filter.subject} options={subjects} onChange={(value) => setFilter({ ...filter, subject: value })} />
+          {activeCount > 0 && (
+            <button
+              className="secondary-button"
+              onClick={() => setFilter({ ...filter, stage: "全部", roster: "全部", exportable: "全部", subject: "全部" })}
+            >
+              清除進階條件
+            </button>
+          )}
+        </div>
+      )}
     </section>
   );
 }

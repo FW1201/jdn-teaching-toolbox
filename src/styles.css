@@ -2553,3 +2553,111 @@ h3 {
     padding-top: 8px;
   }
 }
+
+/* ════════════════════════════════════════════════════════════
+   Binance 重構 Phase 4：快速啟用層 + 進階篩選折疊
+   ════════════════════════════════════════════════════════════ */
+
+/* ── 快速啟用架（收藏 / 最近使用）── */
+.quick-shelf {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 18px;
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  background: var(--panel);
+}
+
+.quick-shelf-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.quick-shelf-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+  width: 92px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.quick-shelf-items {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+}
+
+.quick-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 8px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-btn);
+  background: var(--panel-2);
+  color: var(--text);
+  white-space: nowrap;
+  font-size: 0.88rem;
+  transition: border-color 0.15s var(--ease), background-color 0.15s var(--ease);
+}
+
+.quick-chip.fav {
+  box-shadow: inset 3px 0 0 var(--primary);
+}
+
+.quick-chip:hover {
+  border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+  background: color-mix(in srgb, var(--primary) 8%, transparent);
+}
+
+/* ── 進階篩選折疊 ── */
+.advanced-filter-toggle.active {
+  border-color: color-mix(in srgb, var(--primary) 45%, transparent);
+  color: var(--primary);
+}
+
+.filter-badge {
+  display: inline-grid;
+  place-items: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: var(--radius-pill);
+  background: var(--primary);
+  color: var(--on-primary);
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.filter-popover {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--panel);
+}
+
+@media (max-width: 760px) {
+  .quick-shelf-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .quick-shelf-items {
+    width: 100%;
+  }
+}
