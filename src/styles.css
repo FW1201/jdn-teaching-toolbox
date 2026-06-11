@@ -41,10 +41,12 @@
 body {
   margin: 0;
   min-width: 320px;
+  /* Binance arena-hero-gradient 語彙：深黑基底 + 克制的黃色光暈 */
   background:
-    linear-gradient(135deg, color-mix(in srgb, var(--primary) 8%, transparent), transparent 34%),
-    linear-gradient(315deg, color-mix(in srgb, var(--accent) 7%, transparent), transparent 32%),
-    var(--bg);
+    radial-gradient(1200px 600px at 85% -10%, color-mix(in srgb, var(--primary) 7%, transparent), transparent 60%),
+    radial-gradient(900px 500px at -10% 100%, color-mix(in srgb, var(--accent) 4%, transparent), transparent 55%),
+    linear-gradient(180deg, var(--bg) 0%, #12151a 100%);
+  background-attachment: fixed;
   font-size: calc(16px * var(--font-scale));
 }
 
@@ -2346,4 +2348,60 @@ h3 {
 .workspace-header .ghost-button:hover {
   border-color: var(--line-strong);
   background: color-mix(in srgb, var(--primary) 7%, transparent);
+}
+
+/* ════════════════════════════════════════════════════════════
+   Binance 重構 Phase 2：漸層光暈系統（黃色 glow，後置覆蓋層）
+   ════════════════════════════════════════════════════════════ */
+
+/* ── Hero 光暈：首頁 topbar 右上角黃暈 ── */
+.topbar {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-lg);
+}
+
+.topbar::before {
+  content: "";
+  position: absolute;
+  inset: -40% -10% auto auto;
+  width: 480px;
+  height: 480px;
+  background: radial-gradient(circle, color-mix(in srgb, var(--primary) 12%, transparent), transparent 65%);
+  pointer-events: none;
+}
+
+/* ── 統計卡：行情數字感（黃色數字 + 斜向漸層面）── */
+.showcase-stats div {
+  border: 1px solid var(--line);
+  background: linear-gradient(160deg, color-mix(in srgb, var(--primary) 9%, var(--panel-2)), var(--panel-2) 55%);
+}
+
+.showcase-stats strong {
+  color: var(--primary);
+  font-family: var(--font-number);
+  font-weight: 700;
+}
+
+/* ── 卡片 hover glow ── */
+.tool-card,
+.resource-card,
+.extension-card {
+  transition: border-color 0.18s var(--ease), box-shadow 0.18s var(--ease), transform 0.18s var(--ease);
+}
+
+.tool-card:hover,
+.resource-card:hover,
+.extension-card:hover {
+  border-color: color-mix(in srgb, var(--primary) 40%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--primary) 25%, transparent),
+    0 16px 40px rgba(0, 0, 0, 0.45),
+    0 0 48px -12px color-mix(in srgb, var(--primary) 18%, transparent);
+  transform: translateY(-2px);
+}
+
+/* 投影卡維持平面，不加 glow（投影機上雜訊）*/
+.projection-mode .projection-card {
+  box-shadow: none;
 }
